@@ -1,6 +1,6 @@
 ---
 layout: tag-blog
-title: EnvOps
+title: envOps
 slug: envOps
 category: envOps
 menu: false
