@@ -135,20 +135,20 @@ _클릭하면 다른 페이지로 이동하거나 같은 페이지의 다른 문
 _글에 이미지를 삽입합니다._
 ```
 1. (``이미지`` 삽입) :
-![이미지](https://ekspertos.github.io/me.png "인공지능")
+![이미지](https://ekspertos.github.io/assets/img/me.jpg "인공지능")
 2. (`사이즈를 조절`하고 싶은 경우 HTML 태그로 처리) :   
-<img src="https://ekspertos.github.io/me.png" width="300" height="200">
+<img src="https://ekspertos.github.io/assets/img/me.jpg" width="300" height="200">
 
 3. (이미지 삽입 후, `링크 걸기`)
-[![이미지](https://ekspertos.github.io/me.png)](https://ekspertos.github.io/me.png)  
+[![이미지](https://ekspertos.github.io/assets/img/me.jpg)](https://ekspertos.github.io/assets/img/me.jpg)  
 ```
 1. (``이미지`` 삽입) :
-![이미지](https://ekspertos.github.io/me.png "인공지능")
+![이미지](https://ekspertos.github.io/assets/img/me.jpg "인공지능")
 2. (`사이즈를 조절`하고 싶은 경우 HTML 태그로 처리) :   
-<img src="https://ekspertos.github.io/me.png" width="300" height="200">
+<img src="https://ekspertos.github.io/assets/img/me.jpg" width="300" height="200">
 
 3. (이미지 삽입 후, `링크 걸기`)
-[![이미지](https://ekspertos.github.io/me.png)](https://ekspertos.github.io/think/2019/06/25/think-future-ai/)  
+[![이미지](https://ekspertos.github.io/assets/img/me.jpg)](https://ekspertos.github.io/think/2019/06/25/think-future-ai/)  
 
 ---
 * __표 작성__

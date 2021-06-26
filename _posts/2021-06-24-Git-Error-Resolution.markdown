@@ -12,7 +12,7 @@ comments: true
 
 ## Git Error
  `git push`를 한 후 OpenSSH 인증과정으로 넘어가는 과정에서 ``서버가 응답을 하지 않는 에러``가 발생했습니다.
- ![이미지](https://ekspertos.github.io/assets/img/envops/2021-06-24-Git-Error-Resolution2.png "Git-Error")
+ ![이미지](https://ekspertos.github.io/assets/img/envops/2021-06-24-Git-Error-Resolution2.PNG "Git-Error")
 
 ```
  $ GIT_TRACE=1 GIT_TRANSFER_TRACE=1 GIT_CURL_VERBOSE=1 git push -u origin master
@@ -91,7 +91,7 @@ comments: true
 
 `ctrl+c` 를 누르고 기다려 보니 openSSH가 뜨기는 하지만 더 이상 진행이 되지 않습니다.
 이게 SSH문제인지 알고 방화벽을 수정하고 난리를 쳐봤지만 헛고생이였습니다.
-![이미지](https://ekspertos.github.io/assets/img/envops/2021-06-24-Git-Error-Resolution.png "Git-Error2")
+![이미지](https://ekspertos.github.io/assets/img/envops/2021-06-24-Git-Error-Resolution.PNG "Git-Error2")
 
 ---
 
