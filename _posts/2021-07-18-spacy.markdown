@@ -1,0 +1,96 @@
+---
+layout: post
+title:  "spaCy 패키지 정리"
+subtitle: "spaCy Package"
+categories: projects
+tags: blog github pages jekyll spacy
+comments: true
+---
+
+
+## 개요
+> 설명된 [블로그](https://towardsdatascience.com/so-whats-spacy-ad65aa1949e0)와 [공식 페이지](https://spacy.io/models)를 참고했습니다.
+> 표와 같은 구조화된 데이터를 다루는데 Pandas를 이용한다면,  
+> `NLP`에서는 텍스트와 같이 구조화되지 않은 데이터를 다루는데 `SpaCy`를 사용합니다.
+> 데이터 분석에 사용되는 spaCy 라이브러리를 소개합니다.
+
+- 목차
+  - [SpaCy functions](#spacy-functions)
+  - [Trained Models & Pipelines](#trained-models-pipelines)
+  - [표제어 추출(Lemmatization)이란?](#표제어-추출lemmatization이란)
+
+
+
+---
+## SpaCy functions
+* __Tokenization & POS Taggin__
+텍스트 데이터를 이용하는데 가장 먼저 필요한게 톤큰화 과정입니다.
+SpaCy 각각의 언어에 따라 다른 규칙을 사용해서 문장을 단어별로 나누어 줍니다.
+[이미지]
+토큰화된 단어들을 얻었다면, `POS 태깅`을 해 줄 수 있습니다.
+POS 태깅이란 그 단어의 문법적 속성(grammarical properties)을 매칭 시켜주는 것입니다
+[이미]
+
+* __Named Entity Recognition(NER)__
+개채명 인식(Named Entity Recognition)이란 말그 대로 이름을 가진 개체를 인식하겠다는 것을 의미합니다.
+어떤 의미하는 단어를 보고 그 단어가 어떤 유형인지를 인식하는 것을 말합니다.
+[이미지]
+
+사전 학습된(pre-trained) 모델의 예측에 따르면 다음과 같습니다.
+  - `Apple` : “Companies, agencies, institutions, etc.”
+  - `U.K` : “Countries, cities, states”
+  - `$1` : “Monetary values, including unit”
+
+사전 학습된 지식에 따라 예측된 결과이므로 이 결과가 완벽하지는 않습니다.
+그래서 이것을 사용하는 상황에 따라서 추가 학습/튜닝이 필요합니다.
+
+
+* __Similarity__
+단어, 문장 뿐만 아니라 문서 사이의 유사도를 구할 수 있습니다.
+[이미지] 코사이 유사도
+Cosine similarity를 통해 두 단어 백터 사이의 유사도가 계산됩니다.
+[이미지]
+
+
+## Trained Models & Pipelines
+* __SpaCy의 파이프라인 패키지 이름__
+`[lang]_[name]`으로 구성되어 있으면 `[name]` 또한 3가지 구성으로 나뉠 수 있습니다.
+  1. __Type__  
+    - `core` :  범용적으로 사용되는 파이프라인으로, 태깅, 파싱,  [표제어 추출](#표제어-추출lemmatization이란), 개채명 인식(NER)이 모두 포함 된 패키지
+    - `dep` : 태깅, 파싱과 표제어 추출 포함 된 패키지
+
+  2. __Genre__
+    - `web` : 웹의 내용들을 이용해 학습된 패키지
+    - `news` : 뉴스 기사를 이용해 학습된 패키지
+
+  3. __Size__
+    - `sm` : 단어 백터가 포함되지 않은 패키지
+    - `md` : 20k 단어 백터와 500k의 단어들 포함된 패키지
+    - `lg` : 500k 단어 백터가 포함된 패키지
+    - `trf` : transformer을 이용해 학습된 패키지(다른 패키지들은 CNN 사용)
+
+  예를 들어 `en_core_web_sm`의 경우 웹에서 학습된 작은 파이프라인 패키지를 뜻합니다.
+
+  spaCy v3.0 부터는 `en` 단독으로 사용할 수 없습니다.
+    [이미지]
+
+
+
+## 표제어 추출(Lemmatization)이란?
+
+  > [다음글](https://wikidocs.net/21707)을 참고 했습니다.
+  > 정규화 기법 하나로 말뭉치(corpus)에 있는 단어의 개수를 줄일 수 있는 기법입니다.
+  > 눈으로 봤을 때는 서로 다른 단어이지만 하나의 단어로 일반화시킬 수 있다면
+  > 하나의 단어로 일반화 시켜서 문서 내 단어 수를 줄이겠다는 것입니다.
+
+  표제어 추출은 단어들로부터 그 단어의 `기본 사전형 단어`를 찾아가는 과정입니다.
+  예를들어 am,are,is는 서로 스펠링이 다르지만 그 뿌리 단어는 be라고 볼 수 있습니다.
+  이 단어들의 표제어는 be 입니다.
+
+  표제어 추출을 하는 가장 섬세한 방법은 형태학적 파싱입니다.
+  형태소란 ''의미를 가진 자장 작은 단위를 뜻합니다.''
+  형태학(morphology)이란 형태소로부터 단어들을 만들어가는 학문을 뜻합니다.
+
+  [참고] https://www.machinelearningplus.com/nlp/lemmatization-examples-python/
+  [이미지]
+  [이미지]spacy
