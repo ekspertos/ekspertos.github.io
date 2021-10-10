@@ -2,8 +2,9 @@
 layout: post
 title:  "WER with Levenstein Distance"
 subtitle: "WER"
-categories: projects
+categories: projects Jekyll
 tags: blog github pages jekyll spacy
+use_math: true
 comments: true
 ---
 ## 서론
