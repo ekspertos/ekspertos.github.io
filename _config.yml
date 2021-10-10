@@ -113,14 +113,8 @@ exclude:
   - Gemfile.lock
 
 markdown: kramdown
-highlighter: rouge
-lsi: false
-excerpt_separator: "\n\n"
-incremental: false
-
 kramdown:
   footnote_backlink: '&#x21a9;&#xfe0e;'
-  input: GFM
   math_engine:       mathjax
   math_engine_opts:
     preview:         true
