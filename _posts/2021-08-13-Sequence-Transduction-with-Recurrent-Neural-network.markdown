@@ -2,7 +2,7 @@
 layout: post
 title:  "RNN Transducer Review"
 subtitle: "RNN-T"
-categories: projects
+categories: projects Jekyll
 tags: blog github pages jekyll spacy
 comments: true
 ---
