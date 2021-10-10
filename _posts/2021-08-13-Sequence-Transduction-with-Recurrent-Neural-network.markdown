@@ -4,6 +4,7 @@ title:  "RNN Transducer Review"
 subtitle: "RNN-T"
 categories: projects Jekyll
 tags: blog github pages jekyll spacy
+use_math: true
 comments: true
 ---
 ## 서론
