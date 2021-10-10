@@ -71,16 +71,16 @@
 <!-- MathJax -->
 
 <script type="text/x-mathjax-config">
-  MathJax.Hub.Config({
+  MathJax = {
 	TeX: {
     equationNumbers: {
         autoNumber: "AMS"
     },
-    tex2jax: {
-      inlineMath: [ ['$','$'], ["\\(","\\)"] ],
-      processEscapes: true
+    tex: {
+      inlineMath: [['$', '$'], ["\\(", "\\)"]],
+      processEscapes: true,
     }
-  });
+  }
 </script>
     
 <script type="text/javascript"
