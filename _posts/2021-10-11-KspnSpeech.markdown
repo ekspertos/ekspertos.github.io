@@ -8,8 +8,12 @@ use_math: true
 comments: true
 ---
 > ETRI에서 공개한 한국어 음성 인식 관련 논문이다
+>
 > AI 허브에서 공개한 한국어 대화 데이터(KsponSpeech) 데이터셋을 사용한다
+>
 > [논문] KsponSpeech: Korean Spontaneous Speech Corpus for ASR
+>
+> [Link] https://www.mdpi.com/2076-3417/10/19/6936
 
 ## Introduction
 논문은 AIHub에서 제공하는 969h 데이터셋을 이용한다.
@@ -56,7 +60,7 @@ Dev 파일들은 end-to-end model에서 최적의 파라미터를 찾기 위해 
 
 hyp을 space-normalize 과정을 통해 reference와  띄어쓰기가 동일하게 되도록한 후 둘 사이의 WER을 계산한다
 
-![이미지](https://ekspertos.github.io/assets/img/review/2021-10-11-2021-10-11-Sequence.PNG)
+![이미지](https://ekspertos.github.io/assets/img/review/2021-10-11-Sequence.PNG)
 ![이미지](https://ekspertos.github.io/assets/img/review/2021-10-11-Sequence_sWER.PNG)
 
 ### 3.3 Comparision of RNN and Transformer Architectures
