@@ -1,0 +1,52 @@
+---
+layout: post
+title:  "Into Automatic Speech Recognition"
+subtitle: "ASR"
+categories: projects Jekyll
+tags: blog github pages jekyll spacy
+use_math: true
+comments: true
+---
+
+> ASR Automatic Speech Recognition
+> ASR 관련 논문을 읽기 위해 필요한 사전 지식들을 정리보았다
+> Librispeech에서 좋은 결과를 낸 ContextNet 논문을 예로 사용한다
+
+## 서론
+다음 글들을 해석할 수 있을 정도의 지식을 습득하는 것이 목표 이다
+![이미지](https://ekspertos.github.io/assets/img/review/2021-10-12-ContextNet-Experiment-1.PNG)
+
+![이미지](https://ekspertos.github.io/assets/img/review/2021-10-12-ContextNet-Experiment-2.PNG)
+
+![이미지](https://ekspertos.github.io/assets/img/review/2021-10-12-ContextNet-WER.PNG)
+
+### 1. log-mel spectrogram
+	* 80 dimensional filterbank
+	* 25ms Window
+	* 10ms stride
+
+
+### 2. Word Piece Model
+	* sentencepiece
+	* presented by BERT
+
+### 3. WER, CER, sWER, TER
+	* Leveinstein Distance
+
+### 4. CTC, RNN-T, Attention decoder
+
+### 5. Adam optimizer
+
+### 6. transformer learning rate schedule
+
+### 7. SpecAugment
+	* time warp
+	* frequency mask
+	* time mask
+
+### 8. L2 regularization
+
+### 9. beam search Algorithm
+
+### 10. Language Model
+	* used with beamsearch
