@@ -14,9 +14,7 @@ comments: true
 
 ## 서론
 다음 글들을 해석할 수 있을 정도의 지식을 습득하는 것이 목표 이다
-![이미지](https://ekspertos.github.io/assets/img/review/2021-10-12-ContextNet-Experiment-1.PNG)
-
-![이미지](https://ekspertos.github.io/assets/img/review/2021-10-12-ContextNet-Experiment-2.PNG)
+<img src = "https://ekspertos.github.io/assets/img/review/2021-10-12-ContextNet-Experiment-1.PNG" width ="250" /> <img src = "https://ekspertos.github.io/assets/img/review/2021-10-12-ContextNet-Experiment-2.PNG" width ="250" />
 
 ![이미지](https://ekspertos.github.io/assets/img/review/2021-10-12-ContextNet-WER.PNG)
 
