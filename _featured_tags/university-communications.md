@@ -1,7 +1,7 @@
 ---
 layout: tag-blog
 title: Communications
-slug: Communications
+slug: communications
 category: university
 menu: false
 order: 1
