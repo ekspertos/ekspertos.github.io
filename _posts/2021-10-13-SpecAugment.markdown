@@ -9,12 +9,16 @@ comments: true
 ---
 
 > [논문] SpecAugment: A Simple Data Augmentation Method for Automatic Speech Recognition
+>
 > 음성인식 모델 관련 논문을 찾아보면 SpecAugment가 대부분 사용되는 것을 볼 수 있다
+>
 > SpecAugment 논문에 어떤 기법들이 제시되어 있는지 알아본다.
 
 ## 1. Introduction
 본 논문은 Augmenttation을 위한 3가지 기법을 소개한다.
 1. Time Warping
+  일정한 기준을 가지고 하나의 지점을 다른 지점으로 밀어버린다
+  밀어버린 결과 한쪽은 늘어나고 다른 한쪽은 줄어들은 형태가 나온다
 2. Frequency Masking
 3. Time Masking
 
