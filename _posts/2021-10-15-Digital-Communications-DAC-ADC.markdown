@@ -81,8 +81,22 @@ Sampling과 Quantization 과정을 지나기 때문에 원래 정보를 정확�
 ## OverSampling
 
 DAC 오버샘플링을 알아본다.
+Over-Sampling을 하면 신호 정보가 있는 구간 간의 거리가 멀어져 간단한 아날로그 필터로 복원이 가능하다.
 ![이미지](https://ekspertos.github.io/assets/img/university/2021-10-19-oversampling.PNG)
+예를 들어 44.1kHz의 경우 20kHz 대역의 신호는 -20kHz ~ 20kHz 의 주 신호와 그 신호의 성분에 n*44.1kHz가 더해져 44.1kHz의 배수 주파수를 중심으로 반복되는 형태의 신호가 된다.
 
+이를 신호만 뽑아내기 위해서는 20kHz 이하에서는 영향을 주지 않고 24.1kHz 이상의 신호를  완전히 차단 할 수있는 필터가 있어야 한다. 이러한 필터를 완벽하게 아날로그로 만드는 것은 불가능에 가깝다.
+
+만일 4배 over-sampling으로 인터펄레이션 시키면 그 반복되는 신호는 44.1kHz * 4 = 176.4kHz 주기로 반복되기에 20kHz에서 156.4kHz 사이에서 충분한 간격에서 필요한 감쇄를 시킬 수 있는 것이다.
+
+일반적으로 pole 하나당 2배 주파수에서 6dB가 감소하며, pole 주파수에서 3dB 감소한다. 20~24.1 사이는 0.27 octave 가 되기에 pole 하나에 3.9dB에 지나지 않게 된다.
+
+오버샘플링 전, Butterworth 필터의 경우 60dB 이상을 필터하려면 37개의 pole이 필요하다. 그러나 4배의 오버샘플링을 적용한 경우 4의 pole을 가진 Butterworth filter로도 71.5dB 정도로 Aliasing 신호를 감쇄시킬 수 있다.
+
+CD에서는 Low Pass Filter을 사용한다.
+
+
+[참고] dac 에서 over sampling 을 하는 이유 https://www.enjoyaudio.com/zbxe/index.php?mid=questions&document_srl=1177522
 
 \\<!--
 
