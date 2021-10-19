@@ -68,15 +68,23 @@ Sampling과 Quantization 과정을 지나기 때문에 원래 정보를 정확�
   [위키백과] Automatic Gain Control
   자동 이득 제어는 증폭기 또는 증폭기 체인의 폐쇄 루프 피드백 조절 회로로, 그 목적은 입력에서 신호 진폭의 변화에도 불구하고 출력에서 ​​적절한 신호 진폭을 유지하는 것입니다
   ```
-
+  작은 신호가 들어올 경우 증폭시키고 큰 신호가 들어오면 감쇄시킨다
   감쇄와 증폭을 모두 사용해 Dynamic Range에서 동작할 수 있도록 한다
+
+  ``출력 파워를 일정하게 유지하도록 하는 장치`` , 진폭을 조절하는 것이 아닌 신호 파워를 조절한다
 
   2. ALC(Automatic Level Control)
   Analog RF에서 주로 사용하며, 일정 범위를 넘어서는 신호를 조절할 수 있다
 
 
 
+## OverSampling
 
+DAC 오버샘플링을 알아본다.
+![이미지](https://ekspertos.github.io/assets/img/university/2021-10-19-oversampling.PNG)
+
+
+\\<!--
 
 ## 3G / 4G 음성부호화
   > 3G 휴대전화의 구조 (14)-자연스러운 영상을 전송하는 부호
@@ -132,3 +140,5 @@ PCM(Pulse Code Modulation)은 ``파형의 진폭`` 즉, 높낮이를 기준으�
 높낮이를 무시하기 때문에 DSD 파일은 모두 1 비트를 사용한다.
 
 DSD512는 샘플링주파수 394kHz 보다 412배 높은 주파수로 DSD를 해준 다는 의미이다.
+
+-->
