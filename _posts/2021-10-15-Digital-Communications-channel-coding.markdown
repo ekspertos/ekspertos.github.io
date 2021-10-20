@@ -28,7 +28,7 @@ Average spectral efficiency가 `1`인 시스템은 정말 좋은 시스템으로
  - `5G` :  5G networks promise efficiencies of between 0.12 - 30 bits/s/Hz
 
 
-__Data Rate를 증가시키는 방법__r
+__Data Rate를 증가시키는 방법__
 $$
 C = W log_2(1+\frac{\alpha P_{TX}}{N_0 W}) \ \ bps
 $$
@@ -96,10 +96,13 @@ $$
 위 식을 이용해 channel coding의 장점을 알 수 있다.
 
 채널 코딩을 하면 우리가 송신한 information 데이터에 대한 Eb/N0이 좋아진다.
-동일한 SNR을 이용한다 하더라도 채널 코딩을 이용해 1bit를 2bit로 증가시켜 보낸다면
-각각의 bit가 SNR을 10씩 주어 총 Eb/N0이 20이 된다.
+C = 1/2 인 경우 즉 1bit information을 2bit로 송신한 경우를 살펴보자.  
+수신단에서 1 bit 당 10dB 만큼의 SNR 값을 갖는다면 information은 2bit에 대한 정보이므로 총 10dB + 3dB 만큼의 SNR 값을 갖는다
+$$
+\frac{E_b}{N_0} = \frac{1}{C} SNR = 2 \times SNR = 10dB + 3dB = 13dB
+$$
 
-dB단위로 바꾸어주면 3dB 늘어난 Eb/N0을 갖게된다.
+SNR이 동일한 상황에 channel coding을 하면 더 좋은 SNR로 신호를 수신할 수 있다.
 
 bit에대한 에너지도 증가하지만 노이즈 파워도 증가된다. 그러나 Eb/N0이 2배가 된 이유는 다음과 같다.
 $$
@@ -110,10 +113,11 @@ $$
 
 ![BER_Curve](https://ekspertos.github.io/assets/img/university/2021-10-15-BER-curve.PNG)
 
-우리의 기존 Eb/N0이 8dB라고 하면 1/2의 coding을 추가하면 SNR이 2배 즉, 3dB가 늘어난 상태로 information bit들이 수신된다. 원래 10e-3이였던 BER가 10e-5이 된느 것을 볼 수 있다.
+우리의 기존 Eb/N0이 8dB라고 하면 1/2의 coding을 추가하면 SNR이 2배 즉, 3dB가 늘어난 상태로 information bit들이 수신된다.
+원래 10e-3이였던 BER가 10e-5이 된 것을 볼 수 있다.
 
-다른 기준으로 보면 8dB에서 동작했던 시스템을 5dB에서도 동작 시킬 수 있다.
-좀더 열악한 통신 환경에서도 동작할 수 있다는 의미이다.
+다른 기준으로 보면 8dB에서 동작했던 시스템을 5dB에서도 동작 시킬 수 있다
+좀더 열악한 통신 환경에서도 동작할 수 있다는 뜻이다
 
 
 ### Error Performance VS bandwidth

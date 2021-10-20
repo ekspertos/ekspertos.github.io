@@ -61,26 +61,34 @@ $$
   `total power`
   N = 10log(10^(-10.69)+10^(-10.39))) = -102.2dBm
   ```
-  Interface noise는 온도에 따른 노이즈 외의 노이즈들을 말한다. 일반적으로 Interface noise에 대해 의미있는 값을 구하기 힘들기 때문에 고려하지 않는다.
+  Interface noise는 온도에 따른 노이즈 외의 노이즈들을 말한다(ex. )
+  일반적으로 Interface noise에 대해 의미있는 값을 구하기 힘들기 때문에 고려하지 않는다.
 
   Interface와 noise는 곱하는 것이 아니라 더해야 하므로 위의 식을 이용한 것이다
-
+  db 단위에서 더하는 의미는 실제로 서로 곱한다는 얘기이므로 이를 주의해야 한다.
 
 - __Signal Power at the Reciever__
   `reciever sensitivity` 라고도 하며 요구된 Eb/N0 혹은 SNR 에 필요한 수신 전력을 구한다.
 
-
-
-
 ```
 이것은 확실히 기억하고 가야한다
 내가 송신 출력을 2배로 하든 채널 코딩을 해주든
-SNR이 2배가 된다는 의미는 -3dB 만큼 더해줘야 한다는 것이다. 1/4 된다는 것은 -6dB를 해줘야 한다는 것이다.
+SNR이 2배가 된다는 의미는 3dB 만큼 더해줘야 한다는 것이다. 1/4 된다는 것은 6dB를 해줘야 한다는 것이다.
 ```
 ```
 2MHz bit - > 1MHz symbol
 동일한 Eb/N0에서 required SNR 이 2배 증가한다
 ```
+
+- __RSSI(Recieved Signal Strength Indicator)__
+복잡한 추가적 복조 연산 과정을 포함하지 않은 수신 전력(단위 : [dBm])을 나타낸다.
+
+수신 신호와 노이즈를 합한 신호이다.
+
+$$
+  r(t) = \alpha s(t) + n(t)
+$$
+
 
 
 ## Link Gain
@@ -91,15 +99,18 @@ SNR이 2배가 된다는 의미는 -3dB 만큼 더해줘야 한다는 것이다.
 
   지향성 안테나는 beam forming 을 사용하며 현재 5G 기지국에서 사용되는 방식이다.
 
+  특정 방향으로의 Gain을 갖는다
+
+
 
 
 - __Diversity Gains__
   ![이미지](https://media.springernature.com/lw685/springer-static/image/art%3A10.1186%2Fs13638-019-1366-8/MediaObjects/13638_2019_1366_Fig3_HTML.png)
   송신 단에 안테나를 여러개 두거나 수신단에 여러개의 안테나를 두면 SNR을 증가시킬 수 있다.
-  - __송신 Diversity__
+  - __Tx Diversity Gain__
     여러개의 안테나를 사용하면 그중에 어느 하나를 수신해도 된다
 
-  - __수신 Diversity__
+  - __Rx Diversity Gain__
   $$
   r_0 + r_1 = 2\alpha + n + m \\
   SNR = \frac{4 \alpha^2}{2\sigma^2}
@@ -138,14 +149,14 @@ SNR이 2배가 된다는 의미는 -3dB 만큼 더해줘야 한다는 것이다.
     통신해야할 거리가 늘어날 수록 감쇄가 증가한다
 
   - __Center Frequency__
-    신호는 `Direct Signal` 뿐만 아니라 `Reflected 과 Diffracted Signal`을 통해 수신될 수 있다. 반사와 회절된 신호를 수신해도 정상적으로 동작할 수 있다.
+    신호는 `Direct Signal`(Line of Sight(LOS)) 뿐만 아니라 `Reflected 과 Diffracted Signal`(non-Line of Sight(non-LOS)) 을 통해 수신될 수 있다. 반사와 회절된 신호를 수신해도 정상적으로 동작할 수 있다.
 
     주파수가 증가할 수록 신호의 반사와 회절 능력이 감소하며 장애물을 뚫고 들어가면 결국 신호가 없어져 버린다.
 
     그래서 center frequency가 증가할 수록 loss가 증가한다
 
   - __Antenna Height Rx/Tx__
-    안테나의 높이가 높을 수록 더 원할한 통신이 가능하다
+    일반적으로 안테나의 높이가 높을 수록 더 원할한 통신이 가능하다
 
 - __Shadow / Fade Margin__
   ![이미지](https://ars.els-cdn.com/content/image/3-s2.0-B9780080508030500125-f07-06-9780080508030.gif)
@@ -161,3 +172,16 @@ SNR이 2배가 된다는 의미는 -3dB 만큼 더해줘야 한다는 것이다.
   송신 부에서의 Loss이다 (impedence loss, cable loss 등)
 - __Reception Loss__
   수신 부에서의 Loss이다
+
+
+10의 SNR로 통신을 했다고 말했는데
+고객이 느끼는 입장에서는 20의 Eb/N0으로 통신된 것이라고 느낀다
+
+
+
+
+800MHz 대역을 SKT에서만 가지고 있었다
+다른 통신사들은 2GHz를 사용하기 때문에 동일한 기지국이라도 1/2 거리만 지원 가능했다.
+
+5G는 3.5GHz를 fade margin이 큰 도심에서 작동해야 하므로 거리를 늘리기 힘들다.
+송신 Diversity를 만들어 약간의 완화를 시킨다.
