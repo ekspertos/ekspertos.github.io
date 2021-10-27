@@ -1,7 +1,7 @@
 ---
 layout: post
-title:  "Transformer-Encoder"
-subtitle: "Transformer(3)"
+title:  "Conformer"
+subtitle: "Conformer"
 categories: projects
 tags: blog github pages jekyll spacy transformer
 comments: true
