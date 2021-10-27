@@ -8,6 +8,15 @@ use_math: true
 comments: true
 ---
 
+## Widlar current source
+작은 전류에서 사용한다
+더 작은 저항 값을 사용할 수 있다
+
+## Wilson current source
+출력 임피던스 크게 하려고 사용한다
+
+
+
 ## Differential Amplifier
 
 Differential Amplifier을 사용하는 이유
@@ -55,7 +64,7 @@ differential output swing 또한 그에 비례하여 증가한다
 Common Mode로 동잘하는 경우 왜 증폭이 0일까?
 Common mode로 사용하는 경우 증폭값이 다음과 같다
 $$
-A_v = -\frac{R_D}{\frac{1}{g_m} + R_{EE}}
+A_v = -\frac{\triangle R_D}{\frac{1}{g_m} + 2R_{EE}}
 $$
 
 이때 ideal current source를 사용하면 증폭값은 `0` 이 된다
@@ -95,6 +104,10 @@ Miller Effect에 대한 분석은 다음과 같다
 1.  feedback 되어 있는 임피던스를 2개의 ground된 임피던스로 바꾸어준다
 2. C2 값은 CF와 비슷한 값을 갖는 반면 C1의 경우 증폭값 만큼의 큰 값을 갖는다
 따라서 C1이 커질 수록 wp가 감소하여 midband가 줄어든다 즉 주파수 특성이 나빠진다
+
+internal capacitance external에 비해 작은 값이므로 low pass에 영향을 준다
+internal 를 증가 시킨다면, w가 감소하여 low pass 되는 지점이 더 빨리 찾아온다
+midband가 줄어들며 주파수 특성이 안 좋아진다.
 
 3. gain을 줄이거나 feedback이 없도록 만들어 주어야한다 그러나 Intrinsic capacitor 때문에 현실에서는 피할 수 없다
 
