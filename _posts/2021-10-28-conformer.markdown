@@ -41,16 +41,16 @@ __단점__
 
 ---
 
-###__Conformer Model 구조__
-1. SpecAug
-2. convolution subsampling Layer
-3. Linear
-4. Dropout
-5. Conformer Blocks
-  5.1 macaron-style FeedForward Module
-  5.2 multi-head self Attention Module
-  5.3 Convolution Module
-  5.4 macaron-style FeedForward Module
+### __Conformer Model 구조__
+- SpecAug
+- convolution subsampling Layer
+- Linear
+- Dropout
+- Conformer Blocks
+  - macaron-style FeedForward Module
+  - multi-head self Attention Module
+  - Convolution Module
+  - macaron-style FeedForward Module
 
 ---
 
