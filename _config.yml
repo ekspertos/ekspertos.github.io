@@ -35,12 +35,12 @@ font_heading:        "'NanumGothic','Consolas','-apple-system','Verdana','PingFa
 
 # The text font. Expects a string that is a valid CSS font-family value.
 #font:                "'Merriweather-Light','Lato','-apple-system','Verdana','PingFang SC','Helvetica Neue','Arial','Hiragino Sans GB','Microsoft YaHei','WenQuanYi Micro Hei','sans-serif'"
-font:                "'Consolas','NanumGothic','-apple-system','Verdana','PingFang SC','Helvetica Neue','Arial','Hiragino Sans GB','Microsoft YaHei','WenQuanYi Micro Hei','sans-serif'"
+font:                "'NanumGothic','Consolas','-apple-system','Verdana','PingFang SC','Helvetica Neue','Arial','Hiragino Sans GB','Microsoft YaHei','WenQuanYi Micro Hei','sans-serif'"
 
 # The string encoding what fonts to fetch from Google Fonts.
 # See: https://qwtel.com/hydejack/docs/configuration/
 #google_fonts:        Lato
-google_fonts:        Consolas, NanumGothic
+google_fonts:        NanumGothic, Consolas
 
 # If you do not use a Google Fonts, uncomment the line below
 # no_google_fonts:     true
