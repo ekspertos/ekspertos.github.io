@@ -25,3 +25,11 @@ $break-point-dynamic: 102em;
 $break-point-font-large: 125em;
 
 $dynamic-width: calc(50% - 28rem);
+
+/*
+   Grid
+   ========================================================================== */
+
+$right-sidebar-width-narrow: 100px !default;    // default 200px
+$right-sidebar-width: 200px !default;           // default 300px
+$right-sidebar-width-wide: 250px !default;      // default 400px
