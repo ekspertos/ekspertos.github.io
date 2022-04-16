@@ -3,7 +3,7 @@
 {% capture include_to_scssify %}{% include styles/style.scss %}{% endcapture %}
 {% include copyright-header.txt %}{{ include_to_scssify | scssify }}
 
-@media(max-width: 1000px) {
+@media(max-width: 700px) {
 .markdown-body {
   -ms-text-size-adjust: 100%;
   -webkit-text-size-adjust: 100%;
@@ -71,7 +71,7 @@
 
 
 .markdown-body code {
-  font-family: NanumGothic, Consolas, "Liberation Mono", Menlo, Courier, monospace;
+  font-family: Consolas, NanumGothic, "Liberation Mono", Menlo, Courier, monospace;
   font-size: 11px;
 }
 
