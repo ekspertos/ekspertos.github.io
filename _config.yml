@@ -120,7 +120,8 @@ kramdown:
   footnote_backlink: '&#x21a9;&#xfe0e;'
   math_engine:       mathjax
   math_engine_opts:
-    preview_as_code: false
+    preview: true
+    preview_as_code: true
 
 compress_html:
   comments:          ["<!-- ", " -->"]
