@@ -41,8 +41,8 @@
 
 {% unless site.no_google_fonts %}
   .wf-active {
-    font-family: {{ font | default:"'Sans-serif'" }};
-    h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6, .heading { font-family: {{ font_heading | default:"'Sans-serif'" }}; }
+    font-family: {{ font | default:"'Consolas','NanumGothic'" }};
+    h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6, .heading { font-family: {{ font_heading | default:"'Consolas','NanumGothic'" }}; }
   }
 {% endunless %}
 
