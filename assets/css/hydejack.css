@@ -14,7 +14,8 @@
   padding-right: 3%;
   padding-bottom: 6%;
   word-wrap: break-word;
-  font-size: 16px;
+  font-size: 14px;
+  word-spacing: -1px;
 }
 
 
@@ -117,12 +118,12 @@
 }
 
 .markdown-body .highlight {
-  margin-bottom: 16px;
+  margin-bottom: 14px;
 }
 
 .markdown-body .highlight pre,
 .markdown-body pre {
-  padding: 16px;
+  padding: 14px;
   overflow: auto;
   font-size: 85%;
   line-height: 1.45;
