@@ -64,7 +64,7 @@
 .markdown-body code,
 .markdown-body kbd,
 .markdown-body pre {
-  font-family: Consolas, NanumGothic, monospace, monospace;
+  font-family: NanumGothic, Consolas, monospace, monospace;
   font-size: 1em;
 }
 
@@ -77,7 +77,7 @@
 .markdown-body pre {
   margin-top: 0;
   margin-bottom: 0;
-  font: 11px Consolas, NanumGothic, "Liberation Mono", Menlo, Courier, monospace;
+  font: 11px NanumGothic, Consolas, "Liberation Mono", Menlo, Courier, monospace;
 }
 
 .markdown-body img {
