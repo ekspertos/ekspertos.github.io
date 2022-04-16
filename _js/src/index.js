@@ -25,6 +25,6 @@ import 'web-animations-js';
 import '../lib/modernizr';
 import '../lib/version';
 
-import './katex';
+//import './katex';
 import './drawer';
 import './push-state';

@@ -1,7 +1,8 @@
 article {
 
-  //.katex-display, div.MathJax_Preview {
-  .katex-display{
+
+  katex-display, div.MathJax_Preview {
+  //.katex-display{
       // Prevent code linebreaks and allow side-scrolling (much better readability on mobile)
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
@@ -10,7 +11,6 @@ article {
 
     backface-visibility: hidden;
   }
-  /*
 
   div.MathJax_Preview {
     font-family: $code-font-family;
@@ -26,11 +26,10 @@ article {
     font-size: 1.0em;
     background-color: rgba(0, 0, 0, 0.03);
   }
-  */
 }
-/*
+
 .MathJax_Preview:empty {
   display: none;
   visibility: hidden;
 }
-*/
+

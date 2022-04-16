@@ -11,10 +11,9 @@ comments: true
 ## 서론
 >
 > Librispeech 데이터셋에서 8위에 위치한 conformer에 대해 알아본다
->
 >https://paperswithcode.com/paper/conformer-convolution-augmented-transformer
->
 > https://github.com/espnet/espnet/blob/master/espnet2/asr/encoder/conformer_encoder.py
+> 
 
 
 ## Introduction

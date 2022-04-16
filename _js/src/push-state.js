@@ -31,7 +31,7 @@ import elemDataset from 'elem-dataset';
 
 import { hasFeatures, animate } from './common';
 import CrossFader from './cross-fader';
-import upgradeMathBlocks from './katex';
+//import upgradeMathBlocks from './katex';
 
 import Flip from './flip/flip';
 import './flip/title';
@@ -219,7 +219,7 @@ if (!window.disablePushState && hasFeatures(REQUIREMENTS)) {
       if (window.ga) window.ga('send', 'pageview');
 
       // Upgrade math blocks
-      upgradeMathBlocks();
+      //upgradeMathBlocks();
     })
     ::makeUnstoppable()
     .subscribe();

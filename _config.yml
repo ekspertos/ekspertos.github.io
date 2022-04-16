@@ -27,20 +27,21 @@ author:
 
 # Fallback image and color
 image:               /assets/img/main_left2.jpg
-color:               '#4f86aa'
+color:               '#203340'
 
 # The font used for headings. Expects a string that is a valid CSS font-family value.
 #font_heading:        "'Merriweather-Light','Lato','-apple-system','Verdana','PingFang SC','Helvetica Neue','Arial','Hiragino Sans GB','Microsoft YaHei','WenQuanYi Micro Hei','sans-serif'"
-font_heading:        "'NanumGothic','Consolas','-apple-system','Verdana','PingFang SC','Helvetica Neue','Arial','Hiragino Sans GB','Microsoft YaHei','WenQuanYi Micro Hei','sans-serif'"
+font_heading:        "'Consolas','NanumGothic','-apple-system','Verdana','PingFang SC','Helvetica Neue','Arial','Hiragino Sans GB','Microsoft YaHei','WenQuanYi Micro Hei','sans-serif'"
 
 # The text font. Expects a string that is a valid CSS font-family value.
 #font:                "'Merriweather-Light','Lato','-apple-system','Verdana','PingFang SC','Helvetica Neue','Arial','Hiragino Sans GB','Microsoft YaHei','WenQuanYi Micro Hei','sans-serif'"
-font:                "'NanumGothic','Consolas','-apple-system','Verdana','PingFang SC','Helvetica Neue','Arial','Hiragino Sans GB','Microsoft YaHei','WenQuanYi Micro Hei','sans-serif'"
+font:                "'Consolas','NanumGothic','-apple-system','Verdana','PingFang SC','Helvetica Neue','Arial','Hiragino Sans GB','Microsoft YaHei','WenQuanYi Micro Hei','sans-serif'"
 
 # The string encoding what fonts to fetch from Google Fonts.
 # See: https://qwtel.com/hydejack/docs/configuration/
 #google_fonts:        Lato
-google_fonts:        NanumGothic, Consolas
+google_fonts:        Consolas
+google_fonts:        NanumGothic
 
 # If you do not use a Google Fonts, uncomment the line below
 # no_google_fonts:     true
@@ -121,7 +122,7 @@ kramdown:
   math_engine:       mathjax
   math_engine_opts:
     preview: true
-    preview_as_code: true
+    #preview_as_code: true
 
 compress_html:
   comments:          ["<!-- ", " -->"]
