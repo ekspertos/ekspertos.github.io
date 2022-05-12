@@ -80,4 +80,4 @@ Time warping, being the most expensive as well as the least influential of the a
 학습 데이터에 overfitting 되는 문제를 Augmentation을 이용해 해결할 수 있다.
 
 
-또한 본 논문에서는 이러한 Augmentation 기법들과 Label smoothing을 같이 사용하면  불안정한 학습이 진행될 수 있다고 한다. 특히 lr 이 감소되는 지점에서 더 크게 나타난다고 한다. 이것을 줄이고자 본 논문은 lr이 decay된느 지점에서는 label smoothing을 하지 않았다.
+또한 본 논문에서는 이러한 Augmentation 기법들과 Label smoothing을 같이 사용하면  불안정한 학습이 진행될 수 있다고 한다. 특히 lr 이 감소되는 지점에서 더 크게 나타난다고 한다. 이것을 줄이고자 본 논문은 lr이 decay되는 지점에서는 label smoothing을 하지 않았다.
