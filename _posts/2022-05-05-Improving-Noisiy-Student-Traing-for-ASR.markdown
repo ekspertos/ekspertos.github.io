@@ -1,16 +1,11 @@
 ---
 layout: post
-title:  "Noisy Student Traning 논문 리뷰"
+title:  "Noisy Student Traning for Speech Recognition 논문 리뷰"
 subtitle: "Noisy Student Training"
 categories: projects
 tags: blog github pages jekyll spacy
 comments: true
 ---
-
-## 서론
-
-> [작성중...]
-
 
 ## 서론
 > 크기가 큰 딥러닝 모델에서 좋은 성능을 보이고 있는 Noisy Student Training 에 대해 알아본다.
@@ -20,13 +15,19 @@ comments: true
 이번 글에서는[LibriSpeech Benchmark](paperswithcode.com/sota/speech-recognition-on-librispeech-test-clean)에서 4번째에 위치하고 있는 기법에 대해 알아본다.
 ImageNet에서 성능향상을 본 Noisy Student Training을 음성 모델에 사용해 SOTA를 기록한 기법이다.
 
-`Conformer + Wav2vec 2.0 + SpecAugment-based Noisy Student Training with Libri-Light`은 모델을 NST 방식으로 훈련했을
-뿐만 아니라 Conformer를 Wav2Vec과 같이 훈련해 LibirSpeech에서 SOTA를 달성했다.
-Semi-supervised 방식과 self-supervised 방식을 같이 사용한 훈련방식으로 Wav2vec 훈련방식은 추후 포스팅할 예정이다.
+포스트는 음성인식이 이미지 분류와 다른, 어떤한 기법들이 ``데이터 필터링과 밸런싱``에 적용되는지에 주목한다.
+
+`Conformer + Wav2vec 2.0 + SpecAugment-based Noisy Student Training with Libri-Light`은 모델을
+NST 기법으로 훈련했을 뿐만 아니라 컨포머를 Wav2Vec의 훈련방식을 적용해 LibirSpeech에서 SOTA를 달성했다.
+Semi-supervised 방식과 self-supervised 방식을 같이 사용한 훈련방식이며 이와 관련된 Wav2vec 훈련방식은 추후
+포스팅할 예정이다.
+
+
+
 
 
 - 목차  
-  - [Noisy Student Training 소개](#noisy-student-training-소개)
+  - [ImageNet에서의 NST 소개](#imagenet에서의-nst-소개)
   - [Used Dataset](#used-dataset)
   - [NST 학습과정](#nst-학습과정)
   - [Noisy 학습](#noisy-학습)
@@ -35,7 +36,7 @@ Semi-supervised 방식과 self-supervised 방식을 같이 사용한 훈련방�
 
 ---
 
-## Noisy Student Training 소개
+## ImageNet에서의 NST 소개
 라벨링이 되지 않은 데이터는 라벨링이된 데이터보다 흔히 볼 수 있으며 훨씬 많은 양을 차지한다.
 논문에서는 라벨링된 데이터 뿐만 아니라 라벨링 되지 않은 데이터들을 모델 학습에 사용할 방법을 제시하고
 이 학습방법을 사용해 그 당시 ImageNet Classification에서 SOTA를 달성하였다.
@@ -47,6 +48,11 @@ NST는 `self-training과 distillation`을 확장시킨 학습 방식으로 풍�
 노이즈에 강한 모델을 만드는 것을 목표로 한다.
 
 
+
+이미지 분류에서 이미지의 예측되는데 사용한 확률을 보고 데이터 필터링을 할 수 있는 반면에, 음성은
+다양한 길이의 텍스트에 대해 잘 분류되었는지 확인해야 하기 때문에 이미지 분류와 다른 기법을 사용해
+데이터 필터링을 진행해야 한다. 데이터 필터링 뿐만아니라 데이터 밸런싱 또한 달라진다.
+
 ---
 
 ## Used Dataset
@@ -55,9 +61,16 @@ NST 학습을 위해 라벨링된 데이터셋과 라벨링되지 않은 데이�
 
 |Type|Dataset|Size|
 |:---:|:---:|:---:|
-|Labeled|ImageNet Datset|14M|
-|Unlabeled|JFT Dataset|300M|
+|Labeled|Librispeech Datset|970h|
+|Unlabeled|LibriLight-60k Dataset|50000h|
 
+|Type|Dataset|Size|
+|:---:|:---:|:---:|
+|Labeled|Librpseech Datset|100h|
+|Unlabeled|Librpseech Dataset|870h|
+
+
+![이미지](https://ekspertos.github.io/assets/img/review/2022-05-13-LibriLight-Dataset.PNG)
 JFT Dataset에서 제공하는 라벨은 NST 학습에서 사용되지 않는다.
 
 ---

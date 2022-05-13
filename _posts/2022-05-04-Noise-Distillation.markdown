@@ -9,7 +9,7 @@ comments: true
 
 
 ## 서론
-> 컴퓨터 비전, 음성인식과 같이 크기가 큰 모델에서 좋은 성능을 보이고 있는 Noisy Student Training 에 대해 알아본다
+> 컴퓨터 비전, 음성인식 모델에서 좋은 성능을 보이고 있는 Noisy Student Training 에 대해 알아본다
 > NST 기법이 처음 제시된 논문 `Self-training with Noisy Student improves ImageNet classification`을 리뷰해 볼 것이다.
 > https://hoya012.github.io/blog/Self-training-with-Noisy-Student-improves-ImageNet-classification-Review/ 참고
 >
