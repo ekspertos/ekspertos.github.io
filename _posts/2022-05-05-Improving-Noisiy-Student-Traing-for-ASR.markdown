@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "Noisy Student Traning for Speech Recognition 논문 리뷰"
+title:  "Noisy Student Traning for ASR 논문 리뷰"
 subtitle: "Noisy Student Training"
 categories: projects
 tags: blog github pages jekyll spacy
