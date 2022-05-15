@@ -8,8 +8,6 @@ comments: true
 ---
 
 ## 서론
-
->
 > Rethinking the Inception Architecture for Computer Vision에서 처음 제시되고
 > 현재 여러 SOTA 모델들의 훈련에 활용된 `Label Smoothing` 기법에 대해 정리한다.
 > Label Smoothing 기법이 모델 학습에 미치는 영향들이 제시된
