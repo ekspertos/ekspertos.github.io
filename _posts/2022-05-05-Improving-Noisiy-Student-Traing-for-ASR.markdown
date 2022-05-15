@@ -37,41 +37,42 @@ Semi-supervised 방식과 self-supervised 방식을 같이 사용한 훈련방�
 ---
 
 ## ImageNet에서의 NST 소개
-라벨링이 되지 않은 데이터는 라벨링이된 데이터보다 흔히 볼 수 있으며 훨씬 많은 양을 차지한다.
-논문에서는 라벨링된 데이터 뿐만 아니라 라벨링 되지 않은 데이터들을 모델 학습에 사용할 방법을 제시하고
-이 학습방법을 사용해 그 당시 ImageNet Classification에서 SOTA를 달성하였다.
+라벨링 되지 않은 데이터는 라벨링이된 데이터보다 흔하게 볼 수 있으며 훨씬 많은 양을 차지한다.
+라벨링된 데이터 뿐만 아니라 라벨링 되지 않은 데이터들을 모델 학습에 사용하는 방법은 NST 논문이
+제시될 당시 이미지 분류에서 SOTA를 달성하였다.
 
 ![이미지](https://hoya012.github.io/assets/img/noisy_student/1.PNG)
-![이미지](https://blog.kakaocdn.net/dn/sj4vh/btq09jMKztq/cJbR9QWsbku5d2SpWg5rp1/img.png)
 
 NST는 `self-training과 distillation`을 확장시킨 학습 방식으로 풍부한 양의 이미지로 학습되면서
 노이즈에 강한 모델을 만드는 것을 목표로 한다.
 
-
-
-이미지 분류에서 이미지의 예측되는데 사용한 확률을 보고 데이터 필터링을 할 수 있는 반면에, 음성은
-다양한 길이의 텍스트에 대해 잘 분류되었는지 확인해야 하기 때문에 이미지 분류와 다른 기법을 사용해
-데이터 필터링을 진행해야 한다. 데이터 필터링 뿐만아니라 데이터 밸런싱 또한 달라진다.
-
 ---
 
 ## Used Dataset
-NST 학습을 위해 라벨링된 데이터셋과 라벨링되지 않은 데이터셋이 필요하다.
-본 논문에서 사용하는 데이터 셋은 다음과 같다
+음성인식에서 NST의 효과를 입증하기 위해 두가지 실험을 진행한다.
 
-|Type|Dataset|Size|
-|:---:|:---:|:---:|
-|Labeled|Librispeech Datset|970h|
-|Unlabeled|LibriLight-60k Dataset|50000h|
+1. __LibriSpeech-LibriLight__ ( Librispeech 데이터 기반 모델 성능 향상 )
 
-|Type|Dataset|Size|
-|:---:|:---:|:---:|
-|Labeled|Librpseech Datset|100h|
-|Unlabeled|Librpseech Dataset|870h|
+  |Type|Dataset|Size|
+  |:---:|:---:|:---:|
+  |Labeled|Librispeech Datset|970h|
+  |Unlabeled|LibriLight-60k Dataset|50000h|
+
+  기존 1.9/4.1% 을 __1.7/3.4%__ 로 모델 성능을 향상
+
+2. __LibriSpeech 100-860__ ( 제한된 데이터 기반 모델 성능 향상 )
+
+  |Type|Dataset|Size|
+  |:---:|:---:|:---:|
+  |Labeled|Librpseech Datset|100h|
+  |Unlabeled|Librpseech Dataset|870h|
+
+기존 4.7/12.2% 을 __4.2/8.6%__ 로 모델 성능을 향상
 
 
 ![이미지](https://ekspertos.github.io/assets/img/review/2022-05-13-LibriLight-Dataset.PNG)
-JFT Dataset에서 제공하는 라벨은 NST 학습에서 사용되지 않는다.
+
+<p style="text-align:center; color:gray;"> LibriLight Dataset </p>
 
 ---
 
@@ -87,71 +88,135 @@ JFT Dataset에서 제공하는 라벨은 NST 학습에서 사용되지 않는다
     - Noise를 추가해 Student 모델 학습
 5. Student 모델을 Teacher 모델로 하여 2-5 과정 반복
 
-본 논문에서는 Hard Label 보다 Soft Label을 사용한 것이 더 좋은 결과를 보인다.
-
-![이미지](https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FbEhNiQ%2Fbtq1b9P1iaT%2FckaTRqc9r3nzE2uKcroNX1%2Fimg.png)
-
-NST는 semi-supervised learning과 knowledge distillation을 확장한 학습 방식이다.
-Knowledge distillation과 다른점 다음 두 가지이다
-  1. noise 가 첨가된 데이터로 학습된 Student 모델
-  2. Teacher 모델 보다 크거나 같은 Student 모델 크기
-
-그리고 위 두가지를 성능 향상에 대한 핵심이유로 논문에서 설명한다
+본 논문은 ``하드 라벨로`` 인공 라벨을 추출해 다음 모델 학습에 사용한다.
 
 ---
 
-## Noisy 학습
-Student 모델은 노이즈가 더 강하게 첨가된 이미지로 Teacher 모델과 같은 결과를
- 예측해야 한다. Student 모델은 세대가 지날수록 노이즈에 점점  강해진다고 볼
- 수 있다. `RandAugment`, `Dropout`, `Stochastic Depth`를 noise로 사용한다.
+## Data Filtering & Balancing
+모델이 예측하는 클래스에 대한 정확도가
+음성 인식 모델에서 적용될 수 있는 데이터 필터링과 데이터 밸런싱 기법을 제시한다.
 
-![이미지](https://miro.medium.com/max/626/1*EaKI59FdcYsV4Xhw7tmz-Q.png)
+### Data Filtering
+이전 세대 모델에서 출력되는 인공 라벨로 다음 세대의 모델이 훈련된다. 모델이 완벽하지 않은 만큼
+인공적으로 생성된 라벨 또한 완벽하지 않으며, 이상한 라벨들을 필터링 해줄 필요가 있다.
 
-각각의 noise에 대한 설명은 yeomko.tistory.com/42 에 자세히 설명되어 있다.
+이미지 분류는 소프트맥스 함수에서 출력된 예측 확률을 사용해 불량 라벨들을 필터링 해주지만
+음성인식에서는 예측된 텍스트의 길이가 고정되어 있지 않기 때문에 동일한 기법의 필터링이 불가능하다.
+
+텍스트가 선택될 확률로 라벨들을 필터링한다면 __길이가 긴 라벨들은 모두 필터링되어__ 없어질 것이며,
+그렇다고 예측될 확률을 라벨의 길이로 나누어 준다면, __짧은 라벨들이 모두 필터링되어__ 없어질 것 이다.
+
+논문에서는 이러한 문제점을 해결해기 위해  ``예측된 라벨의 길이에 따라 예측 확률을 달리하여 필터링`` 한다.
+
+즉, 비슷한 길이의 라벨들을 묶어서 상대적으로 예측 확률이 작은 라벨들을 필터링 한다.
+
+라벨의 길이에 비해 상대적으로 더 정확하게 예측된 라벨을 구분해 주기 위해 로그 확률(log probability) S와
+리벨의 길이 l을 파라미터로 하는 선형 회귀(linear regression) 모델을 훈련한다.
+
+$$
+s(S,l) = (S - \mu l - \beta) / (\sigma \sqrt{l})
+$$
+
+같은 길이의 라벨들이 갖는 평균 로그 확률에 비해 컷오프 보다 높은 라벨들만 선택해 다음 모델 훈련에 사용한다.
+
+$$
+s(S,l) > s_{cutoff}
+$$
+
+선형회귀 모델은 dev 데이터로 학습되며, 필터링이 제대로 되는지 확인하기 위해 dev 데이터에 대해서 컷오프를
+달리하여 라벨의 WER을 측정한 결과를 제시한다.
+
+![이미지](https://ekspertos.github.io/assets/img/review/2022-05-16-Normalized-Filtering-Score.PNG)
+
+첫번 째 모델에서 $ s > 1 $ 의 라벨은 필터링되지 않은 라벨보다 약 10% 높은 WER 을 보임으로써 필터링 점수가
+클 수록  더 정확한 레이블임을 알 수 있다.
+
+LibriSpeech 100-860에 대해서는 위와 같이 필터링을 달리하면 엄청난 차이를 보이지만.
+
+첫 번째 모델에서 filtering score가 1이 넘는 라벨에 대해 WER이 1.5% 로 기존 3.0% 보다 1.5% 밖에 향상되지 않는다.
+
+
+데이터 필터링에 대해 분포를 보면 다음과 같다.  
+![이미지](https://ekspertos.github.io/assets/img/review/2022-05-16-Normalized-Filtering-Distribution.PNG)
+
+
+## Data Balancing
+첫 번째 모델의 훈련에 사용된 라벨된 데이터셋과 토큰 분포를 같게 해주기 위해 데이터 밸런싱을 진행한다.
+Sub-modular 함수로 표현될 수 있으며 Submodular Optimization으로 밸런싱을 해준다.
+
 
 ---
 
 ## 모델 구조 및 학습방법
-베이스로 사용된 Efficient 모델은 각각 이름이 B7,L0,L1,L2 이며 뒤로 갈수록 모델의 크기가 커지는 것을 의미한다. SOTA를 달성하기 위해 사용한 모델의 자세한 구조는 다음과 같다.
-![이미지](https://ekspertos.github.io/assets/img/review/2022-08-05-efficientnet-architecture.PNG)
 
-논문에서 Iteration 마다 사용한 모델은 다음과 같다.
+1. __LibriSpeech-LibriLight__
 
-||0th|1st|2nd|3rd|4th|
-|:---:|:---:|:---:|:---:|:---:|:---:|
-|Teacher|B7|B7|L2|L2|L2|
-|Student|B7|L2|L2|L2|L2|
+    - __모델 구조__
 
-Iteration 마다 사용되는 Unlabeled Data에 대한 Batch 크기는 다음과 같습니다.
+      ContextNet 구조를 베이스로 하며, Iteration 이 진행될수록 더 큰 모델로 데이터셋이 학습된다.
 
-![이미지](https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTwiahJvNjwn42S4rhHZ4eiDz5IAm7gYWGMlw&usqp=CAU)
+      ContextNet은 $\alpha$ 파라미터로 모델의 크기를 다양하게 조절 가능하다.
+      ![이미지](https://ai2-s2-public.s3.amazonaws.com/figures/2017-08-08/6c26df2751507c8a713b481dfa8fcb6ccfc359f6/3-Table1-1.png)
+      논문에서 Iteration 마다 사용한 모델 $ \alpha $는 다음과 같다.
 
-Unlabed Data의 batch size보다 14배 큰 batch size를 1,2 iteration에서 사용한다.
+      ||0th|1st|2nd|3rd|4th|
+      |:---:|:---:|:---:|:---:|:---:|:---:|
+      |Teacher|2|1.25|1.25|1.75|2.25|
+      |Student|1.25|1.25|1.75|2.25|2.5|
 
-EfficientNet 모델에 효과적인 학습 방식으로 알려진 `fix train-test resolution discrepancy` 또한 사용된다.
+    - __노이즈__
 
-### fix train-test resolution discrepancy
->
-> Fixing the train-test resolution discrepancy 논문에서 제시된 훈련방법이다
-> https://yeomko.tistory.com/43 참고
->
+      Adaptive SpecAugment 의 데이터 증진 기법을 사용한다.
+      F=27, time mask ratio 0.05, time mask 10개
 
-학습 단계에서 보이는 물체의 해상도와 검증 단계에서 보이는 물체의 해상도가 다르다는
-문제점을 극복하기 위해 제시된 학습 방식이다.
-![이미지](https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FbOO4iS%2FbtqEcUVl0p1%2Ffx6vY2okatquliotpcekNk%2Fimg.png)
+    - __데이터 필터링__
 
-흔히 Image Classification에서는 Train과 Test에서 사용되는 이미지는 다음과 같다.
-- `Train` : 랜덤하게 이미지의 특정 부분을 잘라내서 224x224 크기로 키워서 학습에 사용
-- `Test` : 이미지의 중앙에서 224x224 크기만큼 잘라내어 사용
+      LibriSpeech 960h으로 학습된 베이스 모델의 성능이 나쁘지 않기 때문에 별도의 필터링을 사용하지 않는다
 
-위 그림에서 Standard Pre-Processing을 보게되면 Train과 Test 시 인식하는 말의 크기가 다르다는 것을 확인 할 수 있다.
-이 단점을 해결하기 위해 두가지 방안을 제시한다
-  1. Train 시 잘라낸 이미지의 해상도를 낮춰서 훈련
-  2. Test 시 잘라낸 이미지의 해상도를 키워서 검증
 
-이 두가지 기법들을 다양한 실험들을 통해 검증하였고, 최종적으로 Train 시에 475x475, Test 시에는600x600 크기의 해상도로 학습한 FixEfficientNet 모델이 SOTA를 달성한다
+    - __데이터 밸런싱__
+
+      데이터 밸런싱을 사용한다
+
+
+
+2. __LibriSpeech 100-860__
+    - __모델 구조__
+
+      모든 Iteration에서 `LAS-6-1280` 의 모델 구조를 사용한다.
+
+   -  __노이즈__
+
+      ||0th|1st|2nd|3rd|4th|5th|
+      |:---:|:---:|:---:|:---:|:---:|:---:|:---:|
+      |Time Mask (T)|-|1|0.5|0|-1|-inf|
+
+   - __데이터 필터링__
+
+      필터링 컷오프를 다음과 같이 설정해 컷오프보다 낮은 라벨들을 필터링한다.
+
+      ||0th|1st|2nd|3rd|4th|5th|
+      |:---:|:---:|:---:|:---:|:---:|:---:|:---:|
+      |cutoff|-|1|0.5|0|-1|-inf|
+
+      Dev 데이터에 대한 필터링 분포를 보면 다음과 같다.  
+      ![이미지](https://ekspertos.github.io/assets/img/review/2022-05-16-Normalized-Filtering-Distribution.PNG)
+
+    - __데이터 밸런싱__
+    별도의 데이터 밸런싱을 사용하지 않는다
+
 
 ---
 
 ## 실험결과
-![이미지](https://hoya012.github.io/assets/img/noisy_student/4.PNG)
+
+Iteration에 따라 달라지는 WER은 다음과 같다.
+![이미지](https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQDcMZlCiksLnDon7hNUjOUZL4Fws992c8Do_IuP-xKOOFAtLwyDjG3AoE2uhF3HIK-258&usqp=CAU)
+
+각각의 방식에서 SOTA를 달성한다.
+
+1. __LibriSpeech-LibriLight__
+![이미지](https://d3i71xaburhd42.cloudfront.net/dae84b7816b1781a0f258c78cd90f84e3005893a/3-Table2-1.png)
+
+2. __LibriSpeech 100-860__
+![이미지](https://d3i71xaburhd42.cloudfront.net/dae84b7816b1781a0f258c78cd90f84e3005893a/3-Table1-1.png)

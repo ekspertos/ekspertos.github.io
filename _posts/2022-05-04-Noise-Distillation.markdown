@@ -74,8 +74,12 @@ JFT Dataset에서 제공하는 라벨은 NST 학습에서 사용되지 않는다
 
 NST는 semi-supervised learning과 knowledge distillation을 확장한 학습 방식이다.
 Knowledge distillation과 다른점 다음 두 가지이다
-  1. noise 가 첨가된 데이터로 학습된 Student 모델
-  2. Teacher 모델 보다 크거나 같은 Student 모델 크기
+
+  1. __노이즈를 추가해 학습된 Student 모델__
+    노이즈가 추가된 상태에서 이전 모델과 동일하게 예측해야 하므로 노이즈에 점점 강한 모델이 만들어진다.
+
+  2. __Teacher 모델 보다 크거나 같은 Student 모델__
+    더 큰 모델로 증진된 데이터셋에 대해 더 다양하게 정보를 추출할 수 있다.
 
 그리고 위 두가지를 성능 향상에 대한 핵심이유로 논문에서 설명한다
 
@@ -83,7 +87,7 @@ Knowledge distillation과 다른점 다음 두 가지이다
 
 ## Noisy 학습
 Student 모델은 노이즈가 더 강하게 첨가된 이미지로 Teacher 모델과 같은 결과를
- 예측해야 한다. Student 모델은 세대가 지날수록 노이즈에 점점  강해진다고 볼
+ 예측해야 한다. Student 모델은 세대가 지날수록 노이즈에 점점 강해진다고 볼
  수 있다. `RandAugment`, `Dropout`, `Stochastic Depth`를 noise로 사용한다.
 
 ![이미지](https://miro.medium.com/max/626/1*EaKI59FdcYsV4Xhw7tmz-Q.png)
