@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "200604 Git version 3.20.0 오류"
+title:  "20210604 Git version 3.20.0 오류"
 subtitle: "Git 오류"
 categories: envOps
 tags: blog github pages jekyll Git Push OpenSSH

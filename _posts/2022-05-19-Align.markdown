@@ -1,0 +1,31 @@
+
+
+## Learning Everything about Anything: Webly-Supervised Visual Concept Learning
+
+
+given any concept, discovers an exhaustive vocabulary explaining all its appearance
+variations
+
+이미지와 컨셉이 주어지면, 그 컨셉 내에서 이미지를 설명하는 단어를 예측한다.
+
+![이미지](https://ekspertos.github.io/assets/img/review/2022-08-05-Webly-Supervised-Visual-Concept-Learning.PNG)
+
+
+
+
+## CrissCrossed Caption
+
+USE(Bag-of-Words) / InceptionV3 / ResNet-152 / SimCLRv2 / VSE++ / VSRN
+
+를 사용해서 성능을 측정한다
+
+또한 dual encoder로 image-text retrieval을 위한 bidirectional loss 와 text-text retrieval을 위한
+loss를 사용해 evaluation한다.
+
+-> pre-trained BERT , pre-trained EfficientNet(B4)
+
+-> small gain for image-text Task
+-> large gain for text-text task
+-> degradation for image-image task
+
+model trades capacity for better text encoding

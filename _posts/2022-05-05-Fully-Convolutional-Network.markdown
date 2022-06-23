@@ -139,3 +139,67 @@ softmax clasifier, thus reducing drastically the number of parameters im a netwo
 allowing an architecture that is invariant to the input time series
 
 ```
+
+
+
+
+
+
+
+
+
+## MobileNet
+
+1. EfficientNet
+
+Since MobileNetV2 is a lightweight neural
+network, the method in this paper can be deployed in low-power
+and limited-computing devices such as mobile phone
+
+
+designing more compact
+network structure [16-18] and knowledge transfer [19-22].
+Besides, many lightweight neural networks have been proposed
+to solve above problems, such as SqueezeNet [23], SqueezeNext
+[24], MobileNetV1 [25], MobileNetV2 [26], ShuffleNetV1 [27]
+and ShuffleNetV2
+
+
+
+
+2. Fruit Image Classification Based on MobileNetV2 with Transfer Learning Technique
+https://dl.acm.org/doi/pdf/10.1145/3331453.3361658
+
+Depthwise separable convolution is the main structure of MobileNetV1
+its main effect is to reduce the network parameters and speed up the network
+
+The output dimension of depthwise separable convolution is the same as that of the standard
+
+
+but it factorizes a standard convolution into 3×3
+depthwise convolution and 1×1 pointwise convolution
+
+There is only
+one channel for each group of input features. Convolution kernel
+size is K×K. Therefore, the computational cost and number of
+parameters of depthwise convolution are HWNK2 and K2N
+respectively. Depthwise convolution is equivalent to collecting
+the spatial features of each channel separately, significantly
+reducing the cost of computation and the number of parameters
+
+However, this convolution method will lead to poor information
+flow between channels, and the final output data is not related to
+each input channel
+
+Pointwise convolution is a special 1×1 convolution, and it is
+used to create a linear combination of the output of the
+depthwise convolution.
+
+![이미지](https://production-media.paperswithcode.com/methods/Screen_Shot_2020-06-06_at_4.32.52_PM.png)
+
+
+
+
+- respectively
+
+- by replacing

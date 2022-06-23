@@ -251,10 +251,13 @@ $$
 소프트맥스 출력 값의 수치는 다음과 같이 변한다.
 
 <table style="text-align: center;">
+
   <tr>
     <td><img alt="https://3months.tistory.com/491" src="https://t1.daumcdn.net/cfile/tistory/999CD3435DCE569E1D" />T=0</td><td><img alt="https://3months.tistory.com/491" src="https://t1.daumcdn.net/cfile/tistory/998A48435DCE569E14" />T=2</td><td><img alt="https://3months.tistory.com/491" src="https://t1.daumcdn.net/cfile/tistory/99DCEB435DCE569F24" />T=10</td>
-  <tr>
+  </tr>
+
 </table>
+
 <p  style="color:gray; text-align: center;" > 출처: https://3months.tistory.com/491 </p>
 
 
@@ -278,6 +281,7 @@ Beam Search에서의 영향을 확인하는 그림이다.
 ## Knowledge Distillation에서의 악영향
 
 ![이미지](https://programmer.ink/images/think/b5b42b8438b46dcb1252f62790423676.jpg)
+
 __클래스__ : 장난감 푸들, 모형 푸들, 텐치(파랑)
 
 또한, 푸들 클러스터와 텐치 클러스터 사이에 연속적으로 변화하는 정보가 라벨 스무딩을 하면 사라진다.
@@ -288,17 +292,22 @@ __클래스__ : 장난감 푸들, 모형 푸들, 텐치(파랑)
 
 오히려 학생 모델을 혼자서 학습한 것이 더 잘나올 때도 있었다.
 
-<img src="https://i.imgur.com/xfqgIpP.png" style="width: 500px; height:auto;"/>
+
+<img src="https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FbkSmdm%2FbtqFIGnfkhG%2FIlNqhkRyObDRjU3bSSQ0zK%2Fimg.png" style="width: 500px; height:auto;"/>
+
+
 
 이를 증명하기 위해 정보이론의 상호의존정보(mutual information)을 사용한다.
 
 $$
 I(X;Y) = H(Y) - H(Y|X) = E_{X,Y}[-log(\sum{_x}p(y|x)p(x) + log(p(y|x))]
 $$
+
 정보이론을 배우면 당연한 말이지만 $ H(X|Y) $ 를 구할 수 없어서 $ H(Y) = -log(\sum{_x}p(y|x)p(x) $의 복잡한 식이 사용된다.
 몬테카를로 샘플링을 사용해 구해진 닫힌 형태(closed-form)의 식은 논문에서 확인 가능하다.
 
-<img src="https://i.imgur.com/jkWeLGq.png" style="width: 500px; height:auto;"/>
+<img src="https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2Fb73MCM%2FbtqFHbhcxUp%2F4U3uMKgdhk1J6ibgzS3Cq1%2Fimg.png" style="width: 500px; height:auto;"/>
+
 
 X : N 샘플에 대해서 discrete variable representation 에 대해 K 클래스의 차이
 Y : N 샘플에 대해서 continuos representation 에 대해 K 클래스의 차이
