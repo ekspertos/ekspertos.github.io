@@ -1,3 +1,11 @@
+---
+layout: post
+title:  "AI4Code 대회 2일차"
+subtitle: "Kaggle-2"
+categories: projects
+tags: blog github pages jekyll spacy
+comments: true
+---
 
 
 >

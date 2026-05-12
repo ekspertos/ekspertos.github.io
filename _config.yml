@@ -13,12 +13,12 @@ url:                 https://ekspertos.github.io
 baseurl:             ""
 
 # A very short description of your page
-tagline:             "To be an expert."
+tagline:             "To be an Expert."
 
 # A short description of the page, used in the sidebar and as fallback for the meta description tag.
 # Markdown enabled, but don't use more than one paragraph (enforced by `>`)
 description:         >
-  A beginner in data science. Learn With Me  ^^
+  A beginner in data science. Learn With Me ^^
 
 # This should be the same author as first entry in `_data/authors.yml`
 author:
@@ -40,8 +40,8 @@ font:                "'NanumGothic','Consolas','-apple-system','Verdana','PingFa
 # The string encoding what fonts to fetch from Google Fonts.
 # See: https://qwtel.com/hydejack/docs/configuration/
 #google_fonts:        Lato
-google_fonts:        Consolas
 google_fonts:        NanumGothic
+google_fonts:        Consolas
 
 # If you do not use a Google Fonts, uncomment the line below
 # no_google_fonts:     true

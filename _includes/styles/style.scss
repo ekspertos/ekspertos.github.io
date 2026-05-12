@@ -37,7 +37,7 @@
 
 {% assign font = site.font | default:"'Sans-serif'" %}
 {% assign font_heading = site.font_heading | default:"'Helvetica'" %}
-{% assign google_fonts = site.google_fonts | default:"Roboto+Slab:700|Noto+Serif:400,400i,700,700i" %}
+{% assign google_fonts = site.google_fonts | default:"Roboto+Slab:700|Noto+Serif:400,400i,700" %}
 
 {% unless site.no_google_fonts %}
   .wf-active {
