@@ -19,6 +19,7 @@ comments: true
 - [How Computers Generate Distribution Samples](#how-computers-generate-distribution-samples)
 - [Uniform Distribution Sampling](#uniform-distribution-sampling)
 - [Inverse Transform Sampling](#inverse-transform-sampling)
+  - [참고](#참고)
 
 ---
 ## How Computers Generate Distribution Samples
@@ -71,6 +72,16 @@ $$
 
 ![이미지](https://ekspertos.github.io/assets/img/RandomProcess/2026-05-15-ICDF.png)
 
-이걸 더 확장하면 
+이걸 더 많은 샘플로 확장하면 아래와 같다.
 
 ![이미지](https://ekspertos.github.io/assets/img/RandomProcess/2026-05-15-ICDF-2.png)
+
+---
+
+다음 포스트에서는 다양한 분포에 대해 inverse transform sampling을 적용하는 예시를 살펴볼 것이다.
+
+
+### 참고
+1. 위키피디아, <https://en.wikipedia.org/wiki/Inverse_transform_sampling>
+2. Sampling 방법 / Inverse CDF Method, <https://m.blog.naver.com/jinis_stat/221648391742>
+3. 지수분포의 난수 생성기 (Inverse CDF method) 예제, <https://blog.naver.com/jinis_stat/221641097139>
