@@ -15,7 +15,7 @@
   }
 
   @media screen and (min-width: $break-point-3) {
-    max-width: 70rem;
+    max-width: 70rem;     // <- 이거 늘리면 길이 늘어남
     margin-left: 21rem;
   }
 

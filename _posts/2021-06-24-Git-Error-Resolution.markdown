@@ -1,18 +1,26 @@
 ---
 layout: post
 title:  "20210604 Git version 3.20.0 오류"
-subtitle: "Git 오류"
+subtitle: "Git push 중 응답 없음 문제 해결"
 categories: envOps
 tags: blog github pages jekyll Git Push OpenSSH
 comments: true
 ---
 
-## 개요
-> [TheoryDB](#https://theorydb.github.io/envops/2019/05/03/envops-blog-github-pages-jekyll/)님의 글을 보며 Github 블로그를 구축하는 와중 직면한 발생한 Git에러와 해결 방법을 제시하고자 합니다.
+> GitHub 블로그를 구축하는 과정에서 발생한 Git 에러와 그 해결 방법을 정리하고자 한다.
+> Git 블로그에서는 로컬에서 수정한 포스트를 GitHub에 반영하기 위해 git push 명령어를 사용한다.
+> 그러나 git push를 처음 사용하는 과정에서 OpenSSH 인증 단계로 넘어간 뒤, 서버가 응답하지 않는 문제가 발생할 수 있다.
+> 본 포스트에서는 해당 문제 상황에서 출력되는 Git 디버깅 로그를 살펴보고, 이를 기반으로 해결 방법을 설명한다.
 
-## Git Error
- `git push`를 한 후 OpenSSH 인증과정으로 넘어가는 과정에서 ``서버가 응답을 하지 않는 에러``가 발생했습니다.
+## Git 에러 상세 설명
+GitHub 블로그를 운영하다 보면 로컬에서 작성한 포스트를 원격 저장소에 반영하기 위해 git push 명령어를 자주 사용하게 된다.
+이 과정은 일반적으로 문제없이 진행되지만, 환경에 따라 인증 단계에서 예상치 못한 문제가 발생하기도 한다.
+
+이번에 직면한 에러는 git push를 실행한 뒤 OpenSSH 인증 단계로 넘어가는 과정에서 서버가 응답하지 않는 문제였다.
+
  ![이미지](https://ekspertos.github.io/assets/img/envops/2021-06-24-Git-Error-Resolution2.PNG "Git-Error")
+
+응답이 없는 원인을 구체적으로 파악하기 위해 디버깅 로그를 최대한 상세하게 출력했으며, 해당 로그는 아래와 같다.
 
 ```
  $ GIT_TRACE=1 GIT_TRANSFER_TRACE=1 GIT_CURL_VERBOSE=1 git push -u origin master
@@ -87,23 +95,30 @@ comments: true
 02:43:50.837386 git.c:744               trace: exec: git-credential-manager-core get
 02:43:50.837386 run-command.c:667       trace: run_command: git-credential-manager-core get
 ```
-이후로 진행되지 않습니다.
 
-`ctrl+c` 를 누르고 기다려 보니 openSSH가 뜨기는 하지만 더 이상 진행이 되지 않습니다.
-이게 SSH문제인지 알고 방화벽을 수정하고 난리를 쳐봤지만 헛고생이였습니다.
+이후에도 별다른 응답이 없었고, Ctrl + C를 눌러 강제 종료한 뒤 다시 시도하자 OpenSSH 인증 팝업창이 뜨긴 했지만, 곧바로 에러 메시지가 발생하면서 더 이상 진행되지 않았다.
+
+SSH 문제일 가능성을 의심해 방화벽 설정까지 변경해보았지만, 결과적으로는 불필요한 시도였다.
+
 ![이미지](https://ekspertos.github.io/assets/img/envops/2021-06-24-Git-Error-Resolution.PNG "Git-Error2")
 
 ---
 
 ## 오류해결
-구글링을 오래동안, 열심히 한 결과 저와 똑같은 문제를 직면한 사람을 찾았습니다.
+
+구글링을 통해 동일한 문제를 겪은 사례를 찾을 수 있었다.
 <https://github.com/microsoft/Git-Credential-Manager-Core/issues/364>
-그리고 찾고 찾던 해결방법 또한 올려져 있었지요.
+
+그리고 해당 이슈에서는 우리가 찾고 있던 해결 방법도 함께 제시되어 있다.
+
 ```
 git config --global credential.provider generic
 ```
-다음 문장을 치고 git push를 하니 마법과 같이 팝업창이 뜨면서 git 서버와 연결할 수 있었지요.
+
+위 명령어를 실행한 뒤 다시 git push를 수행하자, 정상적으로 인증 팝업이 뜨면서 Git 서버와의 연결이 이루어졌다.
 
 ---
 
-여러분들은 저와 같이 5시간동안 시간낭비하지 않길 바라며 이 글을 올립니다!
+## 마무리 
+
+이 글이 같은 문제를 겪는 분들에게 도움이 되어, 저처럼 불필요하게 시간을 낭비하지 않기를 바란다.

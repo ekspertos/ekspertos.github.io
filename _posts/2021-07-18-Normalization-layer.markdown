@@ -1,4 +1,12 @@
-## 서론
+---
+layout: post
+title:  "Batch Normalization"
+subtitle: "Normalization"
+categories: projects
+tags: blog github pages jekyll spacy Regularization Normalization
+comments: true
+---
+
 > 딥러닝을 공부하다보면 Normalization, DropOut, Residual Connection 등이 학습시간을 단축 시키기 위해 사용됩니다.
 > 우리는 그 중에서 딥러닝에서 사용되는 ``정규화 계층``에 대 정리해 볼 것입니다.
 > 정규화 기법들로 Batch Normalization, Layer Normalization, Instance Normalization, Group Normalization이 있습니다.
@@ -57,7 +65,7 @@
   활성화 함수를 사용하는 의미가 없어집니다.
 
   ![이미지](https://ekspertos.github.io/assets/img/review/2021-07-16-normailzation-function(2).PNG)
-  이를 해결해주기 위해 BN에는 ``scaling parameter Γ, shift parameter Β``를 사용해줍니다.
+  이를 해결해주기 위해 BN에는 ``scaling parameter \gamma, shift parameter \Beta``를 사용해줍니다.
 
 
 ## Layer Normalization
