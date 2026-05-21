@@ -5,6 +5,7 @@ subtitle: "마크다운(Markdown)"
 categories: unclassified
 tags: blog github pages jekyll markdown  
 comments: true
+hidden: false
 ---
 >
 > 이번 포스트에서는 깃허브 블로그 작성에 사용되는 마크다운(Markdown) 에 대해 알아본다.

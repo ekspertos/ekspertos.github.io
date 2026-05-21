@@ -5,6 +5,7 @@ subtitle: "Transformer(1)"
 categories: projects
 tags: blog github pages jekyll spacy transformer
 comments: true
+hidden: true
 ---
 
 ## 개요

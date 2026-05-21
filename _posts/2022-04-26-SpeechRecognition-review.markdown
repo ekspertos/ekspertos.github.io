@@ -5,6 +5,7 @@ subtitle: "About Speech Recognition"
 categories: speech
 tags: blog github pages jekyll spacy Speech Recognition
 comments: true
+hidden: true
 ---
 
 >

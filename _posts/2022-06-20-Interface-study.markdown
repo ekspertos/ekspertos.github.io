@@ -1,3 +1,14 @@
+---
+layout: post
+title:  "Interface"
+subtitle: "Linux Redirection"
+categories: envOps
+tags: blog github pages jekyll
+comments: true
+hidden: true
+---
+
+
 
 ## PCIe 4.0
 

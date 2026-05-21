@@ -1,3 +1,12 @@
+---
+layout: post
+title:  "Information Theory"
+subtitle: "Information Theory"
+categories: algorithm
+tags: Information Theory
+comments: true
+hidden: true
+---
 
 ## 정보이론 연구 분야
 

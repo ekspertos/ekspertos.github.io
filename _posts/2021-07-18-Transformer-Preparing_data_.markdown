@@ -5,6 +5,7 @@ subtitle: "Transformer(2)"
 categories: projects
 tags: blog github pages jekyll spacy
 comments: true
+hidden: true
 ---
 
 ## 서론

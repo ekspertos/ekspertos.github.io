@@ -5,6 +5,7 @@ subtitle: "Inverse Transform Sampling"
 categories: projects
 tags: Sampling probability distribution generation 
 comments: true
+hidden: false
 ---
 
 > 

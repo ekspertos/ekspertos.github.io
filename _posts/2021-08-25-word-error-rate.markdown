@@ -6,6 +6,7 @@ categories: projects Jekyll
 tags: blog github pages jekyll spacy
 use_math: true
 comments: true
+hidden: true
 ---
 ## 서론
 > ASR 음성인식의 정확성을 검증하는데 사용하는 Word-Error-Rate(WER)에 대해 알아보겠습니다.

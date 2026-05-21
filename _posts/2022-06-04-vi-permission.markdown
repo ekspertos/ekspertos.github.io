@@ -5,6 +5,7 @@ subtitle: "vi permission error"
 categories: envOps
 tags: blog github pages jekyll
 comments: true
+hidden: true
 ---
 
 ## Solution

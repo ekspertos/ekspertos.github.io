@@ -1,12 +1,13 @@
 ---
 layout: post
-title:  "정보이론[1]"
-subtitle: "정보이론[1]"
-categories: university Jekyll
-tags: communications blog github pages jekyll spacy
-use_math: true
+title:  "Information Theory"
+subtitle: "Information Theory"
+categories: algorithm
+tags: Information Theory
 comments: true
+hidden: true
 ---
+
 
 ## 개요
 > 통신, 신호처리, IOT, 정보보안, 머신러닝 등 다양한 분야와

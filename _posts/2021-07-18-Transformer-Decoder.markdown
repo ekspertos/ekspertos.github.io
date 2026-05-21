@@ -1,3 +1,14 @@
+---
+layout: post
+title:  "Transformer Decoder"
+subtitle: "Transformer(4)"
+categories: projects
+tags: blog github pages jekyll spacy transformer
+comments: true
+hidden: true
+---
+
+
 ## 서론
 
 

@@ -1,3 +1,14 @@
+---
+layout: post
+title:  "Choleskey Factorization"
+subtitle: "디지털 통신"
+categories: university Jekyll
+tags: communications blog github pages jekyll spacy
+use_math: true
+comments: true
+hidden: true
+---
+
 ## QR factorization
 
 ### __QR 분해 사용 이유__

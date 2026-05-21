@@ -1,3 +1,14 @@
+---
+layout: post
+title:  "Attention Mechanism"
+subtitle: "Transformer(5)"
+categories: projects
+tags: regularization DeepLearning MachineLearning Inductive Bias
+comments: true
+hidden: true
+---
+s
+
 
 ## 서론
 > Self-Attention을 배우기에 앞서 Attention 기법을 소개드립니다

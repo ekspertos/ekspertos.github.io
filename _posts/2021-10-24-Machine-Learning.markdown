@@ -1,3 +1,14 @@
+---
+layout: post
+title:  "Machine Learning"
+subtitle: "디지털 통신"
+categories: university Jekyll
+tags: communications blog github pages jekyll spacy
+use_math: true
+comments: true
+hidden: true
+---
+
 >
 >시험 전 정리
 >

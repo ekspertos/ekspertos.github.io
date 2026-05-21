@@ -5,6 +5,7 @@ subtitle: "google search"
 categories: envops
 tags: blog github pages jekyll spacy
 comments: true
+hidden: true
 ---
 ## 서론
 > 본 블로그를 구글 검색 엔진에서 찾아볼 수 있도록 하는 작업을 진행하면서

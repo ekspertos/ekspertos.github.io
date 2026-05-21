@@ -1,3 +1,14 @@
+---
+layout: post
+title:  "Information Theory"
+subtitle: "Information Theory"
+categories: algorithm
+tags: Information Theory
+comments: true
+hidden: true
+---
+
+
 ## 확률 및 불규칙 신호론
 ### Lecture 18
 결합 특성 함수  (Joint Characteristic Function)

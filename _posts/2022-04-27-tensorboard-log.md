@@ -5,6 +5,7 @@ subtitle: "Tensorboard"
 categories: projects
 tags: blog github pages jekyll spacy
 comments: true
+hidden: true
 ---
 > 2개 이상의 log 파일을 하나의 턴세보드로 출력하는 코드이다
 >

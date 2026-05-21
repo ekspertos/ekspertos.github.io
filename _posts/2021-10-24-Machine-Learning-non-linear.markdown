@@ -1,3 +1,14 @@
+---
+layout: post
+title:  "Non Linear Machine Learning "
+subtitle: "디지털 통신"
+categories: university Jekyll
+tags: communications blog github pages jekyll spacy
+use_math: true
+comments: true
+hidden: true
+---
+
 ## KNN
 주변 가장 가까이 있는 k개를 확인 한 후 어떤 클래스가 더 많은지 확인한다
 

@@ -6,6 +6,7 @@ categories: projects Jekyll
 tags: blog github pages jekyll spacy
 use_math: true
 comments: true
+hidden: true
 ---
 > ETRI에서 공개한 한국어 음성 인식 관련 논문이다
 >

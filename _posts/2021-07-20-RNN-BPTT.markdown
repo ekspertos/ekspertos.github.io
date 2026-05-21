@@ -1,3 +1,14 @@
+---
+layout: post
+title:  "BPTT이란"
+subtitle: "BPTT이란"
+categories: projects
+tags: regularization DeepLearning MachineLearning Inductive Bias
+comments: true
+hidden: true
+---
+
+
 ## 서론
 > RNN에서 파라미터가 어떻게 학습하는지 알아볼 것 입니다.
 

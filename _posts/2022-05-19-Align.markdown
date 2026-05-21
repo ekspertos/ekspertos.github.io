@@ -1,4 +1,12 @@
-
+---
+layout: post
+title:  "??"
+subtitle: "Noisy Student Training"
+categories: review
+tags: blog github pages jekyll spacy
+comments: true
+hidden: true
+---
 
 ## Learning Everything about Anything: Webly-Supervised Visual Concept Learning
 

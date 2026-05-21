@@ -5,6 +5,7 @@ subtitle: "Git push 중 응답 없음 문제 해결"
 categories: envOps
 tags: blog github pages jekyll Git Push OpenSSH
 comments: true
+hidden: false
 ---
 
 > GitHub 블로그를 구축하는 과정에서 발생한 Git 에러와 그 해결 방법을 정리하고자 한다.

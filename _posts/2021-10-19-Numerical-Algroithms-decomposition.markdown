@@ -1,3 +1,14 @@
+---
+layout: post
+title:  "Numerical Algrithm Decomposition"
+subtitle: "디지털 통신"
+categories: university Jekyll
+tags: communications blog github pages jekyll spacy
+use_math: true
+comments: true
+hidden: true
+---
+
 ## 서론
 
 > `Ax = b` 식의 `x` 값을 구하는 방법에 대해 알아본다

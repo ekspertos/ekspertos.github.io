@@ -1,3 +1,12 @@
+---
+layout: post
+title:  "MobileNetv2 논문 리뷰"
+subtitle: "Noisy Student Training"
+categories: review
+tags: blog github pages jekyll spacy
+comments: true
+hidden: true
+---
 
 
 

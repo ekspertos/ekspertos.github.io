@@ -5,6 +5,7 @@ subtitle: "Kaggle-2"
 categories: projects
 tags: blog github pages jekyll spacy
 comments: true
+hidden: true
 ---
 
 

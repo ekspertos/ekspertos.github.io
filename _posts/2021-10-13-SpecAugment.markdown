@@ -6,6 +6,7 @@ categories: projects Jekyll
 tags: blog github pages jekyll spacy
 use_math: true
 comments: true
+hidden: true
 ---
 
 > [논문] SpecAugment: A Simple Data Augmentation Method for Automatic Speech Recognition

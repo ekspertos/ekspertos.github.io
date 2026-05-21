@@ -5,6 +5,7 @@ subtitle: "Normalization"
 categories: projects
 tags: blog github pages jekyll spacy Regularization Normalization
 comments: true
+hidden: true
 ---
 
 > 딥러닝을 공부하다보면 Normalization, DropOut, Residual Connection 등이 학습시간을 단축 시키기 위해 사용됩니다.

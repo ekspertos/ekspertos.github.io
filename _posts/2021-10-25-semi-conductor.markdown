@@ -6,6 +6,7 @@ categories: university Jekyll
 tags: semiconductor blog github pages jekyll spacy
 use_math: true
 comments: true
+hidden: true
 ---
 
 ## Widlar current source

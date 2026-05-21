@@ -6,6 +6,7 @@ categories: projects Jekyll
 tags: blog github pages jekyll spacy
 use_math: true
 comments: true
+hidden: true
 ---
 ## 서론
 > 음성인식을 위해 알아야하는 Alignment 기법들, 그 중 `RNN-T`에 대해 알아보겠습니다.

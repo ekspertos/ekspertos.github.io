@@ -1,3 +1,14 @@
+---
+layout: post
+title:  "Numerical Algorithms"
+subtitle: "디지털 통신"
+categories: university Jekyll
+tags: communications blog github pages jekyll spacy
+use_math: true
+comments: true
+hidden: true
+---
+
  ## 서론
 > 수치를 표현하는 방법에 대해 소개한다
 >
