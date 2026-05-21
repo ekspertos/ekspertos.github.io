@@ -48,7 +48,6 @@ Inverse Transform Sampling은 컴퓨터가 쉽게 생성할 수 있는 균등분
 ![이미지](https://ekspertos.github.io/assets/img/RandomProcess/2026-05-15-LFSR.png)
 
 대표적인 예로, 위에 그림처럼 시프트 레지스터 구조와 XOR 기반의 피드백을 사용하는 Linear Feedback Shift Register(LFSR)가 있다.
-
 그렇다면 이 균등 분포 샘플들로 어떻게 정규분포와 같은 복잡한 분포의 샘플들을 만들지 알아보자.
 
 
@@ -69,17 +68,85 @@ $$
 F_X^{-1}(u) = x, \ \ u \sim U(0,1) \text{ and } x \sim f_X(x) 
 $$
 
-아래 예시를 보면 이해하기 더 쉬울 것이다.
+아래 예시를 보면 이해가 더 쉬울 것이다. 원래는 균등분포에서 랜덤하게 값을 샘플링하지만, 직관적으로 보기 위해 동일한 간격으로 샘플링을 사용한다.
+먼저, inverse transform sampling으로 균등분포의 샘플을 구하는 예시를 본다.
 
-![이미지](https://ekspertos.github.io/assets/img/RandomProcess/2026-05-15-ICDF.png)
+<p align="center">
+  <img src="https://ekspertos.github.io/assets/img/RandomProcess/2026-05-15-ICDF.png" width="500">
+</p>
 
-이걸 더 많은 샘플로 확장하면 아래와 같다.
+이 예시에서 볼 수 있듯이, 균등분포에서 샘플된 값으로 균등분포의 샘플을 만들기 때문에 입력의 균일한 간격이 출력에서도 그대로 보존되는 것을 볼 있다.
+이제 이것을 라플라스 분포에 적용하면 아래와 같다.
 
-![이미지](https://ekspertos.github.io/assets/img/RandomProcess/2026-05-15-ICDF-2.png)
+<p align="center">
+  <img src="https://ekspertos.github.io/assets/img/RandomProcess/2026-05-15-ICDF-2.png" width="500">
+</p>
+
+
+이 예시에서는 균등분포에서 샘플된 값으로 라플라스 분포를 만들기 때문에 입력의 균일한 간격이 출력에서 보존되지 않고 확률 밀도가 높은 중앙 영역에 출력이 집중되는 것을 볼 수 있다.
+
+아래에 라플라스 분포의 예시를 재현할 수 있는 파이썬 코드를 제공한다.
+
+```python
+import numpy as np
+import matplotlib.pyplot as plt
+from scipy.stats import uniforｍ, laplace
+
+# parameters
+mu = 0
+b = 1
+
+# x for Laplace pdf/cdf
+x = np.linspace(-6, 6, 1000)
+# x for uniform pdf
+uniform_x = np.linspace(-0.01, 1.01, 1000)
+
+# uniform distribution U(0,1)
+uniform_pdf = uniform.pdf(uniform_x, loc=0, scale=1)
+
+# Laplace distribution
+pdf = laplace.pdf(x, loc=mu, scale=b)
+cdf = laplace.cdf(x, loc=mu, scale=b)
+
+# u for inverse CDF
+u = np.linspace(0.001, 0.999, 1000)
+inv_cdf = laplace.ppf(u, loc=mu, scale=b)
+
+plt.figure(figsize=(10, 8))
+
+# (1,1) PDF
+plt.subplot(2, 2, 1)
+plt.plot(pdf, x, color='blue')
+plt.title("Laplace PDF")
+plt.xlabel("f(x)")
+plt.ylabel("x")
+plt.grid(True)
+
+# (2,2) inverse CDF
+plt.subplot(2, 2, 2)
+plt.plot(u, inv_cdf, color='green')
+plt.title("Inverse CDF")
+plt.xlabel("u")
+plt.ylabel(r"$F^{-1}(u)$")
+plt.grid(True)
+
+# (1,2) CDF
+plt.subplot(2, 2, 4)
+plt.plot(uniform_x, uniform_pdf, color='black')
+plt.title("Uniform PDF")
+plt.xlabel("u")
+plt.ylabel("f(u)")
+plt.grid(True)
+
+
+plt.tight_layout()
+plt.show()
+
+```
 
 ---
 
-다음 포스트에서는 다양한 분포에 대해 inverse transform sampling을 적용하는 예시를 살펴볼 것이다.
+다음 포스트에서는 다양한 분포에 대해 inverse transform sampling을 적용하는 예시를 알아볼 것이다.
 
 
 ### 참고
