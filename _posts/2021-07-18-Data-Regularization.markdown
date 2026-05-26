@@ -41,27 +41,101 @@ hidden: false
 ---
 
 ## Inductive Bias
-Regularization을 자세히 알아보기에 앞서, 기법들을 설명할 때 자주 등장하는 개념인 `inductive bias`를 먼저 알아보자.
-
-**Inductive bias**란 문제의 해답이 어떤 성질을 가질 것이라는 가정을 모델 구조나 학습 과정에 반영하여, 가능한 해 공간을 제한하는 것을 의미한다.
-
-자세한 설명은 [Inductive Bias](https://ekspertos.github.io/projects/2021/07/20/Inductive-Bias/) 포스트를 참고하길 바란다.
+Regularization 기법들을 제대로 살펴보기 위해서는 그와 밀접하게 관련된 개념인 **inductive bias**를 먼저 살펴볼 필요가 있다.
+간단히 설명하면 Inductive bias란 문제의 해답이 어떤 성질을 가질 것이라는 가정을 모델 구조나 학습 과정에 반영하여, 가능한 해 공간을 제한하는 것을 말한다.
+자세한 내용은 [Inductive Bias](https://ekspertos.github.io/projects/2021/07/20/Inductive-Bias/) 포스트를 참고하길 바란다.
 
 ---
 
 
 ## Weight Decay
 
-Weight decay 의 경우 로스에 모델이 어떤 방향으로 가야한다는 inductive bias를  penalty를 첨가해서 
+**Weight decay** 란 모델 loss 함수에 패널티 항을 추가해 모델의 가중치들이 작아지도록 유도하는 기법이다. 
+Inductive bias 관점에서 설명하면 **weight decay** 는 모델의 가중치들이 작도록 하는 inductive bias 를 유도하기 위해 사용하는 regularization 기법이다. 
+원래의 gradient descent 식이 다음과 같다.
+$$
+\theta_{t+1} = \theta_t - \alpha \Delta f_t(\theta_t)
+$$
+이때 $\theta_t$ 는 $t$ 시점에서 가중치의 값, $\alpha$ 는 learning rate, 그리고 $f_t(\theta)$ 는 loss 함수이다. 한편 weight decay를 포함하면 다음과 같은 업데이트 식을 사용한다.
+$$ 
+\theta_{t+1} = (1-\lambda)\theta_t - \alpha \Delta f_t(\theta_t)
+$$
+여기서 $\lambda$ 는 decay rate 이라고 부르며 0과 1사이의 값을 갖는다. weight을 업데이트 할 때 weight 의 크기를 일정 비율만큼 감소시키기 때문에 weight가 비약적으로 커지는 것을 방지할 수 있다.
 
-모델에 inductive bias 를 주기 위해 
 
+#### 1. Weight decay 기법이 어떻게 정규화에 도움이 될까?
+
+모델의 가중치가 크다면 모델이 입력 변화에 매우 민감하게 반응해 약간의 노이즈가 포함되더라도 출력이 변할 수 있다. 이는 훈련데이터에 대한 모델이 오버피팅됨을 의미한다.
+
+#### 2. SGD에서 weight decay와 L2 정규화의 관계는?
+
+SGD의 업데이트 식은 앞서 살펴본대로 다음과 같다.
+$$
+\theta_{t+1} = \theta_t - \alpha \Delta f_t(\theta_t)
+$$
+그리고 L2 정규화를 포함한 로스 함수는 다음과 같다.
+$$
+f_t^{\text{L2}}(\theta_t) = f_t(\theta_t) + \frac{\lambda^{\text{L2}}}{2}||\theta_t||_2^{2}
+$$
+L2 정규화를 포함한 로스 함수에 SGD를 하면 다음과 같다.
+$$
+\begin{aligned}
+\theta_{t+1} &= \theta_t - \alpha ( \Delta f_t(\theta_t) + \lambda^{\text{L2}} \theta_t ) \\ &= (1-\alpha \lambda^{\text{L2}} )\theta_t - \alpha \Delta f_t(\theta_t)
+\end{aligned}
+$$
+즉, SGD 기법을 쓸 때 L2 정규화 기법이 weight decay 기법과 동일한 효과를 낸다는 것을 알 수 있다. 
+이 때 $\lambda = \alpha \lambda^{\text{L2}}$ 이기 때문에 weight decay 기법이 L2 정규화 기법보다 더 flexible 하게 변수 값들을 조정할 수 있다. 이것은 weight decay에서 $\alpha$ 값이 gradient의 크기에만 영향을 미치기 때문이다.
+
+그래서 어떤 논문들에서는 weight decay에 L1 정규화 기법을 포함하기도 한다. 
+
+#### 3. 그렇다면 weight decay와 L1 정규화의 관계는?
+
+L2 정규화는 수식적으로 weight decay와 관련이 크게 없다. 그러나 가중치를 줄인다는 관점에서 weight decay로 포함시키는 논문들도 있다.
+$$
+f_t^{\text{L1}} (\theta_t) = f_t(\theta) + \lambda^{\text{L2}} ||\theta_t||_1^{2}
+$$
+
+L1 정규화와 L2 정규화를 함께 사용하는 ElasticNet도 그와 같다.
+$$
+f_t^{\text{EN}} (\theta_t) = f_t(\theta) + (1-\lambda^{\text{EN}}) ||\theta_t||_1^{2} + \lambda^{\text{EN}}||\theta_t||_2^{2} 
+$$
+
+
+#### 1. MAP 관점에서 설명
+
+2. 그렇다면 Adam Optimizer에서는 L2 Regularizer을 사용할까?
+
+
+
+#### 3. 그렇다면 모델 가중치들이 작아진다면 learning rate 을 높여주어야 할까?
+
+Backpropagation 과정을 다시 생각해보면 모델의 가중치 값이 작을수록 backprop 되는 미분 전파 값이 작아진다. 그렇다면 lr을 높여주어야하지 않을까? 
+
+
+Weight decay란 모델의 Loss 함수에 penalty term을 추가해서 를 유도하는 기법이다. 
+
+모델에 inductive bias 를 주기 위해 필요하다
 
 weight decay 는 대표적으로 3가지 기법이 있다
 
 - L1 Regularizer
 - L2 Regularizer
 - Elastic-net penalty
+
+
+1. Weight Decay -> 진짜 개념으로는 L1, L2이랑 다르다
+2. L2랑 개념적으로 같다
+3. 물론 SGD에서 그렇고 Adam을 사용할 경우 같지 않다
+
+왜냐하면 Euclidean Space에서 최적화 되는게 아니고
+Geometry를 바꾸고 최적화를 진행되기 때문에 
+Isotrophic 하게 파라미터들이 감소하는 것이 아니라 
+파라미터들이 서로 다른 크기로 줄어들기 때문에
+보면 안된다.
+
+일단 weight decay 자체는 
+
+
 
 ---
 

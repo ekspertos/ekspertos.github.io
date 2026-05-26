@@ -30,7 +30,7 @@ hidden: false
 정규분포는 다음과 같이 정의된다.
 
 $$
-p_X(x) = \frac{1}{\sigma\sqrt{2\pi}}e^{-\frac{1}{2}(\frac{x-\mu}{\sigma})^2)}
+p_X(x) = \frac{1}{\sigma\sqrt{2\pi}}e^{-\frac{1}{2}(\frac{x-\mu}{\sigma})^2}
 $$
 
 흔히 확률분포를 알고 있으면 샘플링이 가능할 것이라고 생각하지만, 확률분포 만으로는 샘플링이 가능하지 않다. 
