@@ -41,8 +41,9 @@ hidden: false
 ---
 
 ## Inductive Bias
-Regularization 기법들을 제대로 살펴보기 위해서는 그와 밀접하게 관련된 개념인 **inductive bias**를 먼저 살펴볼 필요가 있다.
-간단히 설명하면 Inductive bias란 문제의 해답이 어떤 성질을 가질 것이라는 가정을 모델 구조나 학습 과정에 반영하여, 가능한 해 공간을 제한하는 것을 말한다.
+Regularization 기법들을 제대로 살펴보기 전에 그와 밀접하게 관련된 **inductive bias**라는 개념을 먼저 살펴본다.
+
+**Inductive bias**란, 문제의 정답이 어떤 성질을 가진다고 가정하고, 그 가정을 반영해 모델을 설계하거나 더 적합한 loss function, regularization, optimizer 등을 사용하는 것이다. 이런 가정은 모델이 단순히 데이터에 맞는 해가 아니라, 우리가 가정한 구조에 부합하면서 더 잘 일반화되는 해를 찾도록 유도한다.
 자세한 내용은 [Inductive Bias](https://ekspertos.github.io/projects/2021/07/20/Inductive-Bias/) 포스트를 참고하길 바란다.
 
 ---
@@ -50,7 +51,105 @@ Regularization 기법들을 제대로 살펴보기 위해서는 그와 밀접하
 
 ## Weight Decay
 
-**Weight decay** 란 모델 loss 함수에 패널티 항을 추가해 모델의 가중치들이 작아지도록 유도하는 기법이다. 
+딥러닝 모델을 학습하는 것은 우리가 모은 학습 데이터 $(x,y)$ 쌍에 대해 $y \cong f_\theta(x)$ 가 성립하는 함수 $f_\theta(x)$ 를 찾는 과정이다.
+
+$$
+\min_{\theta} \mathcal{L}(f_\theta(\bold{x}),\bold{y})
+$$
+
+모델 $f_\theta(x)$는 여러 레이어의 선형 변환 $\hat{\bold{x}} = W \bold{x} + \bold{b}$ 을 겹겹이 쌓은 형태로, 적절한 가중치 $\theta$를 찾는 것이 목적이다. 이 때 모델이 Sigmoid, ReLU 와 같은 활성화 함수를 레이어 중간중간 마다 둔다면, 모델은 비선형 함수를 표현할 수 있다.
+
+예를 들어 XOR 함수를 모델로 표현하고 싶은 경우, $\hat{\bold{x}} = W \bold{x} + \bold{b}$ 의 선형 변환만으로 구할 수 있는 방법이 없다. 반면 ReLU 활성화 사용하면 $\hat{\bold{x}} = \text{ReLU}{(x_1-x_2)} + \text{ReLU}(x_2-x_1)$의 간단한 함수로 표현 가능하다.
+이것을 2-레이어 모델로 표현할 수 있다.
+
+- 1번째 레이어 (hidden layer):
+$$
+\hat{\bold{x}} = W_1 \bold{x} \ , \ \text{where} \ W_1 = \begin{bmatrix} +1 & -1 \\ -1 & +1\end{bmatrix}
+$$
+- ReLu 활성화 함수:
+$$
+\tilde{\bold{x}} = \text{ReLU}({\hat{\bold{x}}})
+$$
+- 2번째 레이어 (output layer):
+$$
+\bold{y} = W_2 \tilde{\bold{x}} \ , \ \text{where} \ W_2 = \begin{bmatrix} +1 & +1\end{bmatrix}
+$$
+
+이러하듯 2-레이어 모델을 사용하면 모든 함수를 근사할 수 있다. 이 개념을 **universal approximation theorem** 이라고 한다. 즉, 
+$$
+f_\theta(x) = W_\theta \sigma(W_{1} x)
+$$ 
+
+1. 비선형 함수를 학습하기 위해서 필요
+2. 노이즈 있는 데이터를 학습하기 위해 필요
+3. 변수 보다 더 적은 샘플이 있기 때문에 여러가지 해가 존재할 수 있는데 그중 하나를 찾아줌
+
+
+
+
+그럼 선형일 때는 무조건 solution을 찾을 수 있는걸까?
+
+이때 $f_\theta(x)$는 비선형 함수이고 non-convex 하기 때문에 trivial 하게 최적 값을 찾는 방법이 없다.
+그렇기 때문에 딥러닝은 gradient descent를 사용해서 목적함수를 최소화하는 방식으로 가중치 $\theta$를 찾는다.
+그러나 gradient descent는 global minimum을 찾는다는 확신이 없기 때문에 local minimum을 찾기도 한다.
+이 때 여러개의 local minimum 이 있는데 이때 weight decay 는 local mumimum 중에서 계수 값을 작은 것을 사용하도록 유도하는 기법이다. 
+
+
+내가 다음과 같은 constraint를 만족하는 $\theta$를 찾고 싶다고 하자.
+
+$$
+(\theta - \mu)^T A (\theta - \mu) = 1
+$$
+
+여기서 $\theta$는 우리가 선택하는 변수이고, $\mu$와 $A$는 시스템 또는 데이터로부터 주어지는 파라미터이다.  
+이 constraint를 만족하는 $\theta$들의 집합은 ellipse 형태의 manifold를 형성한다.
+
+즉, $\theta$ 자체가 ellipse인 것이 아니라, $\theta$가 속하는 feasible set이 ellipse 구조를 갖는 것이다:
+
+$$
+\{\theta \mid (\theta - \mu)^T A (\theta - \mu) = 1\}
+$$
+
+---
+
+이때 $\mu$와 $A$에 작은 perturbation (noise)이 존재한다고 하자:
+
+$$
+\mu \rightarrow \mu + \epsilon_1, \quad A \rightarrow A + \epsilon_2
+$$
+
+그러면 constraint surface 자체가 다음과 같이 변형된다:
+
+$$
+(\theta - (\mu + \epsilon_1))^T (A + \epsilon_2) (\theta - (\mu + \epsilon_1)) = 1
+$$
+
+---
+
+이러한 상황에서 가능한 해 $\theta$들 중에서 $\|\theta\|$가 작은 해를 선택하면,  
+perturbation $\epsilon_1, \epsilon_2$에 대해 constraint value의 변화가 상대적으로 작아질 가능성이 있다.
+
+즉, 다음 값의 민감도를 줄이는 방향으로 해를 선택하는 것이다:
+
+$$
+(\theta - (\mu + \epsilon_1))^T (A + \epsilon_2) (\theta - (\mu + \epsilon_1)) - 1
+$$
+
+---
+
+따라서 small-norm solution을 선호하는 것은 noise에 의해 변형된 constraint surface에 대해 더 안정적인 해를 얻기 위한 inductive bias로 해석할 수 있다.
+
+
+
+
+
+
+
+
+**Weight decay** 란 모델 가중치들이 작아지도록 유도하는 기법이다. 
+
+
+란 모델 loss 함수에 패널티 항을 추가해 모델의 가중치들이 작아지도록 유도하는 기법이다. 
 Inductive bias 관점에서 설명하면 **weight decay** 는 모델의 가중치들이 작도록 하는 inductive bias 를 유도하기 위해 사용하는 regularization 기법이다. 
 원래의 gradient descent 식이 다음과 같다.
 $$
@@ -95,37 +194,151 @@ $$
 f_t^{\text{L1}} (\theta_t) = f_t(\theta) + \lambda^{\text{L2}} ||\theta_t||_1^{2}
 $$
 
-L1 정규화와 L2 정규화를 함께 사용하는 ElasticNet도 그와 같다.
+L1 정규화와 L2 정규화를 함께 사용하는 ElasticNet도 이와 같다.
 $$
 f_t^{\text{EN}} (\theta_t) = f_t(\theta) + (1-\lambda^{\text{EN}}) ||\theta_t||_1^{2} + \lambda^{\text{EN}}||\theta_t||_2^{2} 
 $$
 
+#### 4. L1 & L2 정규화 효과는?
 
-#### 1. MAP 관점에서 설명
+L1 정규화와 L2 정규화를 적용했을 때 gradient 는 아래와 같다. 
 
-2. 그렇다면 Adam Optimizer에서는 L2 Regularizer을 사용할까?
+$$
+\Delta f_t^{\text{L2}}(\theta_t) = \Delta f_t(\theta_t) + \lambda^{\text{L2}}\theta_t
+$$
+
+$$
+\Delta f_t^{\text{L1}}(\theta_t) = \Delta f_t(\theta_t) + \lambda^{\text{L1}}\Sigma_n \ \text{sign}(\theta_t^{(n)})
+$$
+
+수식에서 볼 수 있듯이 L2 정규화의 경우 가중치 내에 높은 값을 더 크게 감소하고 작은 값들은 작게 감소하도록 유도한다. 반면 L1 정규화는 높은 값이든 작은 값이든 같은 크기만큼 감소하게 유도한다.
+그래서 L2 정규화는 가중치들을 평평하게 만드는 반면 L1 정규화는 작은 값들이 없어지면서 가중치들이 sparse 하게 분포하게 된다. 
+
+<img src="https://ekspertos.github.io/assets/img/review/Regularization/L1L2WeightDecay.png" width="700">
+
+그림에서 볼 수 있듯이 L1 정규화와 L2 정규화 모두 그 영역 내에서 가장 작은 값을 찾는 것을 볼 수 있다.
+그리고 L2 정규화에 비해 L1 정규화에서 더 한 값이 더 크게 나오도록 유도되어 sparse 하게 나타나는 것을 볼 수 있다.
+
+#### 4. Bayesian estimation 관점에서 L1 & L2 정규화 기법
+
+Bayesian estimation 에서 사용하는 대표적인 방법이 ML estimation과 MAP estimation이다.
+$$
+\hat{x}_{\text{ML}} = \argmax_x p(y | x)
+$$
+$$
+\hat{x}_{\text{MAP}} = \argmax_x  p(x | y)
+$$
+,
+ML estimation은 관측된 데이터 $x$ 가 주어졌을 때,  
+어떤 클래스 또는 parameter $\theta$ 가 그 데이터를 가장 잘 생성했는지를 찾는 방법이다.
+즉 다음 값을 최대화한다.
+$$
+\arg\max_\theta P(x \mid \theta)
+$$
+반면 MAP estimation은  
+관측된 데이터 $x$ 가 주어졌을 때 실제 parameter 또는 클래스가 $\theta$ 일 확률을 찾는 방법이다.
+즉 다음 값을 최대화한다.
+$$
+\arg\max_\theta P(\theta \mid x)
+$$
+Bayes rule에 의해
+$$
+P(\theta \mid x)
+=
+\frac{P(x \mid \theta)P(\theta)}{P(x)}
+$$
+이므로 MAP estimation은 ML estimation에 prior probability $P(\theta)$ 를 추가로 고려한 방법이라고 볼 수 있다.
+예를 들어 길이가 30cm 인 머리카락을 주웠을 때  
+이 머리카락이 남성의 것인지 여성의 것인지 예측한다고 하자.
+
+클래스를 다음과 같이 정의하자.
+- 여성: $F$
+- 남성: $M$
+---
+
+### ML Estimation
+ML estimation은 다음 두 확률을 비교한다.
+$$
+P(x=30 \mid F)
+$$
+$$
+P(x=30 \mid M)
+$$
+즉,
+- 여성이 머리카락을 떨어뜨렸을 때 30cm 머리카락일 확률
+- 남성이 머리카락을 떨어뜨렸을 때 30cm 머리카락일 확률
+중 더 큰 값을 선택한다.
+예를 들어
+$$
+P(30 \mid F)=0.4
+$$
+$$
+P(30 \mid M)=0.1
+$$
+이라면 ML estimation은 여성이라고 판단한다.
+
+---
+
+### MAP Estimation
+
+MAP estimation은 prior probability까지 함께 고려한다.
+즉 다음 값을 비교한다.
+$$
+P(F \mid 30)
+\propto
+P(30 \mid F)P(F)
+$$
+$$
+P(M \mid 30)
+\propto
+P(30 \mid M)P(M)
+$$
+예를 들어 어떤 환경에서
+$$
+P(F)=0.01
+$$
+$$
+P(M)=0.99
+$$
+라면,
+$$
+0.4 \times 0.01 = 0.004
+$$
+$$
+0.1 \times 0.99 = 0.099
+$$
+가 되어 MAP estimation은 남성이라고 판단할 수도 있다.
+
+
+우리는 여기서 MAP estimation을 자세히 알아본다.
+
+$$
+\log (p(\theta|x))
+$$
+
+$$
+p(\theta|x) \propto p(x|\theta)p(\theta)
+$$
+
+$$
+\log p(\theta|x) = \log p(x|\theta) + \log p(\theta)
+$$
+
+즉 $\theta$ 가중치 값의 prior 확률이 gaussian 이라고 가정하고 MAP estimation을 한 것을 L2 정규화,
+ $\theta$ 가중치 값의 prior 확률이 Laplacian 이라고 가정하고 MAP estimation을 한 것을 L1 정규화와 같은 의미를 가지는 것을 알 수 있다.
 
 
 
-#### 3. 그렇다면 모델 가중치들이 작아진다면 learning rate 을 높여주어야 할까?
+#### 5. 그렇다면 Adam Optimizer에서는 L2 Regularizer을 사용할까?
 
-Backpropagation 과정을 다시 생각해보면 모델의 가중치 값이 작을수록 backprop 되는 미분 전파 값이 작아진다. 그렇다면 lr을 높여주어야하지 않을까? 
+SGD에서의 weight decay는 모든 parameter에 동일한 decay coefficient를 적용하여  
+각 weight를 현재 값에 비례해 감소시킨다.
 
+반면 Adam에서는 adaptive learning rate 때문에  
+regularization term 역시 parameter마다 서로 다른 scaling을 받게 된다.
 
-Weight decay란 모델의 Loss 함수에 penalty term을 추가해서 를 유도하는 기법이다. 
-
-모델에 inductive bias 를 주기 위해 필요하다
-
-weight decay 는 대표적으로 3가지 기법이 있다
-
-- L1 Regularizer
-- L2 Regularizer
-- Elastic-net penalty
-
-
-1. Weight Decay -> 진짜 개념으로는 L1, L2이랑 다르다
-2. L2랑 개념적으로 같다
-3. 물론 SGD에서 그렇고 Adam을 사용할 경우 같지 않다
+따라서 Adam에서의 L2 regularization은  
+SGD의 weight decay처럼 동일한 decay coefficient를 적용하는 방식과는 다르게 동작한다.
 
 왜냐하면 Euclidean Space에서 최적화 되는게 아니고
 Geometry를 바꾸고 최적화를 진행되기 때문에 
@@ -133,7 +346,16 @@ Isotrophic 하게 파라미터들이 감소하는 것이 아니라
 파라미터들이 서로 다른 크기로 줄어들기 때문에
 보면 안된다.
 
-일단 weight decay 자체는 
+
+그래서 원래와 같은 Loss에 penalty term을 추가하는 방식은 못쓰고
+weight decay를 사용한다. 이게 adamW이다
+
+
+#### 3. 그렇다면 모델 가중치들이 작아진다면 learning rate 을 높여주어야 할까?
+
+Backpropagation 과정을 다시 생각해보면 모델의 가중치 값이 작을수록 backprop 되는 미분 전파 값이 작아진다. 그렇다면 lr을 높여주어야하지 않을까? 
+
+
 
 
 
