@@ -89,10 +89,28 @@ $$
 시그모이드 함수 $\sigma(x) = \frac{1}{1+e^{-x}}$ 를 활성화 함수로 사용한다고 하자. 
 
 $$
-c \sigma (b_2x-a_1) - c \sigma (b_1x-a_1) \approx \mathbb{1}_{a_1 \leq x \leq a_2} 
+c \times u(x-a) = c \times \sigma (b(x-a)), \text{where } b\to \infin
 $$
 
-그렇다면 $a_1$ 과 $a_2$ 사이에 $c$ 진폭의 step 함수를 만들 수 있다.
+로 unit 함수를 표현할 수 있고
+
+$$
+\text{rect}(a, b) = c \times u(x-a) - x \times u(x-b) 
+$$
+
+그렇다면 $a_1$ 과 $a_2$ 사이에 $c$ 진폭의 rectangular 함수를 만들 수 있다.
+이때 $b$가 크면 클수록 더  rectangular 해진다.
+
+Rectified linear unit (ReLU) 함수 $\sigma_{\text{ReLU}}(x) = \max(0,x)$ 를 활성화 함수로 사용한다고 하자. 
+
+$$
+c \times u(x-a) =  \frac{c}{\epsilon} \sigma_\text{ReLU} (x-a) - \frac{c}{\epsilon}  \sigma_\text{ReLU} (x-a+\epsilon), \text{where } \epsilon \to 0
+$$
+
+
+$$
+c_1 \sigma (b_2(x-a_1)) - c_2 \sigma (b_1(x-a_1+\epsilon)) - c_3 \sigma (b_3(x-a_3)) + c_4 \sigma (b_4(x-a_4+\epsilon)) \approx \mathbb{1}_{a_1 \leq x \leq a_2} 
+$$
 
 <img src="https://ekspertos.github.io/assets/img/review/Regularization/UniversalApproximation1.png" width="700">
 
@@ -178,19 +196,28 @@ plt.show()
 steep가 크면 step function을 더 정확히 만들 수 있긴 한데 gradient descent가 작 되므로 gradient vanishing 문제가 생길 확률이 높다. steep 도 그래서 적절하게 학습 되어야 한다.
 
 
+<https://dlaiml.tistory.com/entry/Universal-Approximation-Theorem>
+
+
 ---
 
 
 
 ## Weight Decay
 
+Weight Decay가 왜 필요한걸까? 예시로 살퍄보자
+
+$$
+f(x) = 2 x_1 + 4x_2 + 6 x_3 + 8 x_4  
+$$
+
+함수를 구하는 문제를 직면했다고 하자. 두 가지 경우를 따진다.
+
+1. 실제로 측정한 값이 변수 개수보다 작을 경우
 
 
+2. 측정 값은 충분하지만 노이즈가 첨가되어 있을 경우
 
-
-1. 비선형 함수를 학습하기 위해서 필요
-2. 노이즈 있는 데이터를 학습하기 위해 필요
-3. 변수 보다 더 적은 샘플이 있기 때문에 여러가지 해가 존재할 수 있는데 그중 하나를 찾아줌
 
 
 
