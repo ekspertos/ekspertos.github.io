@@ -1,0 +1,97 @@
+---
+layout: post
+title: "ML and MAP in Bayesian Inference"
+subtitle: "Bayesian Inference"
+categories: projects
+tags: Optimizer DeepLearning MachineLearning
+comments: true
+hidden: false
+---
+
+Bayesian estimation 에서 사용하는 대표적인 방법이 ML estimation과 MAP estimation이다.
+$$
+\hat{x}_{\text{ML}} = \argmax_x p(y | x)
+$$
+$$
+\hat{x}_{\text{MAP}} = \argmax_x  p(x | y)
+$$
+,
+ML estimation은 관측된 데이터 $x$ 가 주어졌을 때,  
+어떤 클래스 또는 parameter $\theta$ 가 그 데이터를 가장 잘 생성했는지를 찾는 방법이다.
+즉 다음 값을 최대화한다.
+$$
+\arg\max_\theta P(x \mid \theta)
+$$
+반면 MAP estimation은  
+관측된 데이터 $x$ 가 주어졌을 때 실제 parameter 또는 클래스가 $\theta$ 일 확률을 찾는 방법이다.
+즉 다음 값을 최대화한다.
+$$
+\arg\max_\theta P(\theta \mid x)
+$$
+Bayes rule에 의해
+$$
+P(\theta \mid x)
+=
+\frac{P(x \mid \theta)P(\theta)}{P(x)}
+$$
+이므로 MAP estimation은 ML estimation에 prior probability $P(\theta)$ 를 추가로 고려한 방법이라고 볼 수 있다.
+예를 들어 길이가 30cm 인 머리카락을 주웠을 때  
+이 머리카락이 남성의 것인지 여성의 것인지 예측한다고 하자.
+
+클래스를 다음과 같이 정의하자.
+- 여성: $F$
+- 남성: $M$
+---
+
+#### ML Estimation
+ML estimation은 다음 두 확률을 비교한다.
+$$
+P(x=30 \mid F)
+$$
+$$
+P(x=30 \mid M)
+$$
+즉,
+- 여성이 머리카락을 떨어뜨렸을 때 30cm 머리카락일 확률
+- 남성이 머리카락을 떨어뜨렸을 때 30cm 머리카락일 확률
+중 더 큰 값을 선택한다.
+예를 들어
+$$
+P(30 \mid F)=0.4
+$$
+$$
+P(30 \mid M)=0.1
+$$
+이라면 ML estimation은 여성이라고 판단한다.
+
+---
+
+#### MAP Estimation
+
+MAP estimation은 prior probability까지 함께 고려한다.
+즉 다음 값을 비교한다.
+$$
+P(F \mid 30)
+\propto
+P(30 \mid F)P(F)
+$$
+$$
+P(M \mid 30)
+\propto
+P(30 \mid M)P(M)
+$$
+예를 들어 어떤 환경에서
+$$
+P(F)=0.01
+$$
+$$
+P(M)=0.99
+$$
+라면,
+$$
+0.4 \times 0.01 = 0.004
+$$
+$$
+0.1 \times 0.99 = 0.099
+$$
+가 되어 MAP estimation은 남성이라고 판단할 수도 있다.
