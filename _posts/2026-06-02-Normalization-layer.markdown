@@ -306,42 +306,82 @@ $$
 
 ---
 
+
 ## 4. How Does Batch Normalization Help Optimization?
 
-Batch norm 을 제시한 논문에서는 ICS 완화하므로써 batch norm 이 더 효과적으로 모델을 학습한다고 말한다.
-그러나 이 논문은 실제로 ICS 는 완화되지 않고 실제론 loss landscape 을 완만하게 하므로써 학습이 잘되는거라고 주장한다.
+Batch Normalization을 제안한 원 논문에서는 Internal Covariate Shift(ICS)를 완화함으로써 딥러닝 학습을 가속화한다고 설명하였다.
 
-loss landscape가 완만해진다는 것은 gradient 와 loss의 Lipschitness 가 좋아진다는 것을 증명하므로서 증명하였다.
+그러나 이 논문은 Batch Normalization의 효과가 반드시 ICS 감소 때문은 아닐 수 있다고 주장하였다. 저자들은 Batch Normalization을 사용하더라도 Internal Covariate Shift가 실제로 줄어들지 않을 수 있으며, 오히려 Batch Normalization이 loss landscape를 더 smooth하게 만들어 최적화를 쉽게 한다고 설명하였다.
 
-loss landscape가 완만해지므로서 좋아지는 점은, gradient 가 더 predictable 해진다는 점, learning rate 이 더 넓은 범위로 쓸 수 있고, Network convergence 속도가 빨라진다.
+이를 뒷받침하기 위해 저자들은 loss와 gradient의 Lipschitzness를 분석하였다. Batch Normalization이 적용되면 작은 parameter 변화에 대해 loss와 gradient가 급격하게 변하지 않으며, 결과적으로 최적화가 더욱 안정적으로 이루어진다는 것을 보였다.
 
+Loss landscape가 smooth해지면 여러 가지 장점이 생긴다. 먼저 현재 gradient가 다음 step에서도 비슷하게 유지되므로 gradient의 예측 가능성(gradient predictiveness)이 높아진다. 또한 더 넓은 범위의 learning rate를 사용할 수 있으며, 결과적으로 네트워크의 수렴 속도도 빨라질 수 있다.
 
-### 4.1. 왜 Learning rate을 크게 쓸수 있을까
+### 4.1. Why Can Batch Normalization Use Larger Learning Rates?
 
-gradient의 Lipschitness를 더 놓게 했기 때문에 이전 step의 gradient 와 다음 step의 gradient 의 차이가 작다.
+Gradient Descent는 현재 위치에서 계산한 gradient를 이용하여 다음 위치를 결정한다. 따라서 parameter를 조금 이동했을 때 gradient가 급격하게 변하지 않는 것이 중요하다.
 
-그러므로 이전 step의 gradient 에 따라서 조금 더 과하게 가더라도 다음 step과 유사하기 때문에 실제 우리가 가야하는 경로에서 많이 벗어나지 않는다.
+Batch Normalization은 loss landscape를 더욱 smooth하게 만들어 gradient가 급격하게 변하는 현상을 완화한다. 즉 현재 step에서 계산한 gradient와 다음 step에서 계산되는 gradient가 서로 유사하게 유지된다.
 
-또한 Lipschitz constant 에 의해서 생기던 **learning rate upper bound** 가 완화되어 더 넓은 범위의 learning rate을 쓸 수 있다.  
+따라서 learning rate를 다소 크게 설정하더라도 최적화 경로가 크게 흔들리지 않으며, 보다 안정적으로 학습을 진행할 수 있다.
+
+또한 gradient가 $L$-Lipschitz 조건을 만족한다고 가정하면 learning rate는 일반적으로 다음 조건을 만족해야 한다.
 
 $$
 \eta < \frac{2}{L}
 $$
 
+따라서 Lipschitz constant $L$이 작을수록 사용할 수 있는 learning rate의 범위가 넓어진다.
 
-### 4.2. ICS 가 효과 없는 증거
+Batch Normalization은 loss landscape를 smooth하게 만들어 Lipschitz constant를 감소시키므로, 더 큰 learning rate를 안정적으로 사용할 수 있게 해준다.
+
+
+### 4.2. Questioning the Internal Covariate Shift Explanation
+
+### 4.2.1. Evidence Against the Internal Covariate Shift Hypothesis
+
+만약 Batch Normalization의 효과가 Internal Covariate Shift를 줄이는 데 있다면, 인위적으로 Internal Covariate Shift를 증가시켰을 때 학습 성능은 크게 저하되어야 한다.
+
+이를 검증하기 위해 저자들은 Batch Normalization을 적용한 네트워크의 activation에 랜덤 노이즈를 추가하여 Internal Covariate Shift를 의도적으로 증가시키는 실험을 수행하였다.
 
 <img src="https://ekspertos.github.io/assets/img/review/BatchNorm/BatchNormPlusNoise.jpg" width="550">
 
+흥미롭게도 Internal Covariate Shift가 증가했음에도 불구하고 모델은 여전히 안정적으로 학습되었다.
+
+이 결과는 Batch Normalization의 효과를 단순히 Internal Covariate Shift 감소만으로 설명하기 어렵다는 점을 보여준다.
+
+
+### 4.2.2. Evidence Against the Internal Covariate Shift Hypothesis
+
+이 실험에서는 이전 layer를 한 번 업데이트한 뒤 현재 layer가 받는 영향이 얼마나 큰지를 측정한다.
+
+만약 Batch Normalization이 Internal Covariate Shift를 줄인다면, 이전 layer가 업데이트되더라도 현재 layer가 보는 입력 분포는 크게 변하지 않아야 한다.
+
+이를 확인하기 위해 저자들은 업데이트 전후의 gradient 차이를 측정하였다.
+
+아래 그림에서 볼 수 있듯이 Batch Normalization을 사용한 경우에도 gradient 변화량은 작아지지 않았으며 오히려 더 크게 나타났다.
 
 <img src="https://ekspertos.github.io/assets/img/review/BatchNorm/BatchNorml2diff.jpg" width="550">
 
+이는 Batch Normalization이 실제로 Internal Covariate Shift를 감소시키는 것은 아니라는 점을 시사한다. 따라서 Batch Normalization의 효과를 단순히 Internal Covariate Shift 감소만으로 설명하기는 어렵다.
+
+
+### 4.2.3. Smoother Loss Landscape
+
+저자들은 Batch Normalization이 실제로 loss landscape를 더욱 smooth하게 만든다는 사실을 실험적으로 확인하였다.
+
+먼저 parameter를 한 번 업데이트한 이후 gradient가 얼마나 변하는지를 측정하였다. Loss landscape가 smooth하다면 업데이트 전후의 gradient는 서로 유사해야 한다.
+
+실험 결과 Batch Normalization을 사용한 경우 gradient의 변화가 더 작게 나타났으며, 이는 현재 gradient가 다음 step의 gradient를 더 잘 예측할 수 있음을 의미한다.
+
+또한 loss landscape를 시각화한 결과 Batch Normalization을 적용한 경우 훨씬 완만한 형태의 landscape가 형성되는 것을 확인할 수 있었다.
 
 <img src="https://ekspertos.github.io/assets/img/review/BatchNorm/BatchNormLossLandscape.jpg" width="550">
 
+마지막으로 loss와 gradient의 Lipschitz constant를 측정한 결과 역시 Batch Normalization을 사용한 경우 더 작은 값을 보였다.
 
+이는 Batch Normalization이 최적화 문제를 더 잘 조건화된 형태로 만들어 학습을 용이하게 한다는 사실을 보여준다.
 
-BatchNorml2diff
 
 
 
@@ -350,9 +390,11 @@ BatchNorml2diff
 
 [참고]
 
-<https://yxxshin.github.io/2022/09/13/2022-09-13-Batch-Normalization-Backprop/>
+1. <https://yxxshin.github.io/2022/09/13/2022-09-13-Batch-Normalization-Backprop/>
 
 [논문]
-Batch Normalization: Accelerating Deep Network Training by, Reducing Internal Covariate Shift
 
+1. Batch Normalization: Accelerating Deep Network Training by, Reducing Internal Covariate Shift
+
+2. How Does Batch Normalization Help Optimization?
 
