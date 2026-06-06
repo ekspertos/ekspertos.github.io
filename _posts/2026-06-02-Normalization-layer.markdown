@@ -383,13 +383,11 @@ Batch Normalization은 loss landscape를 smooth하게 만들어 Lipschitz consta
 이는 Batch Normalization이 최적화 문제를 더 잘 조건화된 형태로 만들어 학습을 용이하게 한다는 사실을 보여준다.
 
 
+---
 
+## 참고
 
-
-
-
-[참고]
-
+[블로그]
 1. <https://yxxshin.github.io/2022/09/13/2022-09-13-Batch-Normalization-Backprop/>
 
 [논문]
