@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "Adversarial Training"
+title:  "Adversarial Training-copy"
 subtitle: "Adversarial Training"
 categories: projects
 tags: blog github pages jekyll spacy
@@ -8,61 +8,7 @@ comments: true
 hidden: true
 ---
 
-https://chatgpt.com/c/6a0b049b-d58c-8322-992e-0f8bcb9b9723
 
-그니까 boundary 근처에서 취약하다 －＞ 
-
-$$
-\Sigma_{i=0}^M x_i
-$$
-
-
-Q: 근데 loss를 가장 빠르게 증가시키는게, decision boundary를 넘어서려는거 아니야?
-
-A: “loss를 최대화하는 방향”이 항상 “decision boundary를 넘는 방향”은 아니다.
-
-gradient 방향은 “정답 클래스 확률을 가장 빨리 떨어뜨리는 방향”이지 “decision boundary로 가는 방향”이 아니다
-
-그런데 boundary 근처에서는 loss landscape가 매우 가파름
-
-
-Q: 왜 “근처”에서만 취약하냐?
-high-dimensional space에서는 boundary가 매우 복잡하고 촘촘함
-데이터 manifold 주변에 decision boundary가 얇게 감싸고 있음
-
-neural network는 locally linear한 성질이 있음
-그래서 작은 이동에도 쉽게 crossing 가능
-
-
-Q: 왜 high-dimensional에서 decision boundary가 “촘촘하게” 존재하나?
-고차원에서는 “공간 대비 데이터가 너무 희소해서”, boundary가 데이터 주변에 얇게 
-깔릴 수밖에 없다
-
-실제 데이터는 그 공간 전체에 퍼져있지 않음
-전체 공간이 아니라 “아주 얇은 manifold 위”에 있음
-
-
-Q: 고차원에서는 “한 방향으로만 밀어도” 다른 class가 너무 쉽게 존재 
-그런데 고차원에서는 “빈 공간이 너무 많아서” 둘은 모순 아니야?
-
-
-
-Q: adversarial example의 본질?
-
-A: “decision boundary 근처에 있는 점이 gradient 방향으로 살짝 밀리면서 넘어가는 것”
-
-
-
-
-gradient 방향 = 실제 변화 방향
-curvature (비선형 효과)가 약함 의미이다.
-
-작은 perturbation에서도 output 변화가 “예측 가능하게 직선적으로 커짐”
-
-그래서:
-
-조금만 밀어도 logit이 크게 변함
-decision boundary 쉽게 crossing
 
 
 Q: locally linear 하기 때문에 adversarial가 어떤 데이터일지 근사할 수 있는거지 adversarial이 존재하기 위한 필수 조건이 아니네
@@ -306,7 +252,7 @@ adversarial 문제는 gradient artifact가 아니라 geometry 문제
 라는 걸 강하게 보여줌.
 
 3) robust optimization 관점 정립
-Towards Deep Learning Models Resistant to Adversarial Attacks
+Towards Deep Learning Models Resistant to Adversarial Attacks -> PGD
 
 현대 adversarial training의 기반.
 
@@ -415,3 +361,8 @@ https://songsite123.tistory.com/78
 
 Towards the Science of Security and Privacy in Machine Learning
 https://jonathan-hui.medium.com/adversarial-attacks-b58318bb497b
+
+
+
+https://chatgpt.com/c/6a0b049b-d58c-8322-992e-0f8bcb9b9723
+
