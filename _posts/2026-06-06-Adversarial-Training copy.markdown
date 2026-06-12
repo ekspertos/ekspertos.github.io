@@ -251,7 +251,7 @@ $$
 즉, 클래스 라벨 $y$에 따라 전체 방향만 반전될 뿐, **FGSM이 사용하는 gradient의 sign은 weight의 sign과 같은 방향 정보를 담게된다.**
 
 
-###  Adversarial Training of Linear Models Versus Weight Decay
+### 1.3. Adversarial Training of Linear Models Versus Weight Decay
 
 **그렇다면 adversarial training은 어떻게 이루어질까?** 가장 간단한 방법은 원본 입력 $\mathbf{x}$ 대신 adversarial perturbation이 추가된 입력 $\tilde{\mathbf{x}}=\mathbf{x}+\boldsymbol{\eta}$ 를 사용하여 학습하는 것이다. 
 그러면 loss 함수는 다음과 같이 정의된다.
