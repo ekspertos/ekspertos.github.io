@@ -355,29 +355,16 @@ $$
 
 ## 2. Towards Evaluating the Robustness of Neural Networks (2015) — 13.5k citations
 
-
-
 앞서 소개한 FGSM은 입력에 대한 gradient 정보를 이용하여 adversarial example을 생성한다. 따라서 모델이 gradient 정보를 숨기는 **gradient masking** 현상을 보이면 효과적인 adversarial example을 찾기 어려울 수 있다. 이러한 특성을 이용한 대표적인 방어 기법 중 하나가 **Defensive Distillation**이다.
 
 본 논문에서는 이러한 방어 기법에도 효과적으로 동작하는 강력한 최적화 기반 공격 기법인 **CW (Carlini & Wagner) Attack**을 제안한다.
 
 FGSM은 gradient 방향으로 $\epsilon$ 만큼 한 번 이동하여 adversarial example을 생성한다.
-$$
-x_{\mathrm{adv}}
-=
-x
-+
-\epsilon \cdot
-\operatorname{sign}
-\bigl(
-\nabla_x L(x,y)
-\bigr)
-$$
-이 방법은 계산량이 매우 적다는 장점이 있지만, $\epsilon$ 값을 사전에 설정해야 한다는 한계가 있다. $\epsilon$이 너무 작으면 decision boundary를 넘지 못해 공격에 실패할 수 있고, 반대로 너무 크면 이미지가 과도하게 변형될 수 있다. 또한 한 번의 gradient step만 사용하므로 복잡하고 비선형적인 decision boundary를 효과적으로 탐색하지 못할 수 있다.
+이 방법은 계산량이 매우 적다는 장점이 있지만, $\epsilon$ **값을 사전에 설정해야 한다는 한계가 있다**. $\epsilon$이 너무 작으면 decision boundary를 넘지 못해 공격에 실패할 수 있고, 반대로 너무 크면 이미지가 과도하게 변형될 수 있다. 또한 한 번의 gradient step만 사용하므로 복잡하고 비선형적인 decision boundary를 효과적으로 탐색하지 못할 수 있다.
 
 반면 **CW Attack**은 adversarial example 생성 문제를 최적화 문제로 정식화한다. 공격 성공 여부와 perturbation의 크기를 동시에 고려하여 반복적으로 최적화를 수행하기 때문에, 일반적으로 더 작은 distortion으로 공격에 성공하는 adversarial example을 찾을 수 있다. 또한 softmax 기반 loss 대신 logits를 직접 이용하는 목적 함수를 사용하여 gradient masking에 상대적으로 강인한 특성을 보인다.
 
-논문의 주요 기여(contributions)는 다음과 같다.
+논문의 주요 기여(contributions)는 아래와 같다.
 
 1. Adversarial example 생성 문제를 최적화 문제로 정식화하는 방법을 제시.
 2. 공격 성공과 perturbation 크기를 동시에 고려하여 작은 distortion의 adversarial example을 효과적으로 탐색.
@@ -557,7 +544,7 @@ $$
 
 ---
 
-#### 2.4.7. Code Implementation
+#### 2.5. Code Implementation
 
 정확한 구현은 아니지만 C&W attack은 아래과 같은 형태로 구현할 수 있다. 
 
@@ -585,26 +572,176 @@ for i in range(iter):
 
 ## 3. Towards Deep Learning Models Resistant to Adversarial Attacks (2017) — 19.6k citations
 
-Adversarial example을 생성하는 가장 대표적인 방법으로 FGSM이 있다. 그러나 FGSM은 gradient 방향으로 단 한 번만 이동하기 때문에 주어진 perturbation budget 내에서 가장 강력한 adversarial example을 찾는다고 보장할 수 없다. 즉, 동일한 $\epsilon$-ball 내부에 더 강한 adversarial example이 존재하더라도 이를 발견하지 못할 수 있다.
+FGSM은 gradient 방향으로 단 한 번만 이동하기 때문에, 주어진 perturbation budget 내에서 가장 강력한 adversarial example을 찾는다고 보장할 수 없다. 즉, 동일한 $\epsilon$-ball 내부에 더 큰 loss를 유발하는 adversarial example이 존재하더라도 이를 발견하지 못할 수 있다.
 
-이를 해결하기 위해 기존에는 FGSM을 여러 번 반복 적용하는 Iterative FGSM(BIM)이 제안되었다. Madry 등의 연구에서는 이를 더욱 일반화하여, 매 step마다 gradient 방향으로 이동한 뒤 허용된 perturbation 범위를 벗어나면 다시 $\epsilon$-ball 내부로 projection하는 Projected Gradient Descent (PGD) 공격을 사용하였다.
+이러한 한계를 극복하기 위해 FGSM을 여러 번 반복 적용하는 BIM(Basic Iterative Method)이 제안되었다. **Madry는 이와 유사하게 매 step마다 gradient ascent를 수행한 뒤 perturbation이 허용된 범위를 벗어나면 다시 $\epsilon$-ball 내부로 projection하는 PGD(Projected Gradient Descent) 공격을 제안**한다. 이를 통해 주어진 perturbation 범위 내에서 더 큰 loss를 유발하는 adversarial example을 효과적으로 탐색할 수 있다.
 
-또한 본 논문은 adversarial robustness를 다음과 같은 min-max optimization 문제로 정식화하였다.
+하지만 이 논문의 핵심은 PGD 공격 자체에 있지 않다. 저자들은 PGD를 이용해 adversarial example을 생성하는 과정을 모델의 loss를 최대화하는 **내부 최적화** 문제로 해석하였다. 그리고 이를 바탕으로 **adversarial training을 robust optimization 기반의 min-max 최적화 문제로 정식화하였다**.
+
+논문의 주요 기여는 다음과 같다.
+
+1. Adversarial training을 robust optimization 기반의 min-max 문제로 정식화.
+2. PGD를 inner maximization 문제를 근사적으로 해결하는 강력한 first-order 공격으로 활용.
+3. PGD가 매우 강력한 공격임을 실험적으로 보였으며, 이후 adversarial robustness 연구에서 사실상의 표준 $L_\infty$ 공격 baseline으로 사용.
+
+
+### 3.1. Optimization View on Adversarial Robustness
+
+저자들은 adversarial robustness를 다음과 같은 min-max 최적화 문제로 정식화하였다.
 
 $$
-\min_{\theta}
-\mathbb{E}_{(x,y)\sim\mathcal{D}}
+\min_\theta \mathbb{E}_{(x,y)\sim D}
 \left[
-\max_{\|\delta\|\le\epsilon}
-L(x+\delta,y;\theta)
+\max_{\delta \in S}
+L(\theta, x+\delta, y)
 \right]
 $$
 
-내부의 maximization은 현재 모델을 가장 잘 속이는 adversarial perturbation $\delta$를 찾는 과정이고, 외부의 minimization은 이러한 최악의 공격에 대해서도 loss를 최소화하도록 모델을 학습하는 과정이다.
+여기서 `내부 최적화`(inner maximization)는 주어진 perturbation 집합 $S$ 내에서 모델의 loss를 최대화하는 adversarial example을 찾는 과정이며, `외부 최적화`(outer minimization)는 이러한 adversarial example에 대해서도 올바르게 분류하도록 모델을 학습하는 과정이다.
 
-즉, 모델이 단순히 일반 이미지에 대해서만 잘 동작하도록 학습하는 것이 아니라, 주어진 $\epsilon$ 범위 내에서 발생할 수 있는 최악의 adversarial example에 대해서도 올바르게 분류하도록 학습하는 것이다.
+즉, 저자들은 공격과 방어를 하나의 통합된 saddle-point 문제로 해석하였으며, 이를 통해 **adversarial robustness를 정량적으로 평가할 수 있는 기반을 마련하였다.**
+따라서 주어진 perturbation 범위 내에서의 worst-case loss가 작을수록 모델이 더 robust하다고 해석할 수 있다.
 
-이러한 PGD adversarial training은 이후 adversarial robustness 연구의 대표적인 baseline으로 자리잡았으며, 현대 adversarial training 연구의 출발점이 되었다.
+### 3.1. Projected Gradient Descent
+
+PGD 공격은 아래와 같이 정의된다.
+
+$$
+x^{t+1}
+=
+\Pi_{x+S}
+\left(
+x^t + \alpha \,\mathrm{sgn}\!\left(\nabla_x L(\theta, x^t, y)\right)
+\right)
+$$
+
+이 과정을 반복하면 내부 최적화 문제 $\max_{\delta \in S} L(\theta, x+\delta, y)$ 를 근사적으로 해결할 수 있다.
+
+그렇다면 PGD를 수행하면 실제로 최대 loss를 갖는 adversarial example을 찾을 수 있을까? 일반적으로 신경망은 비선형 함수이기 때문에 내부 최적화 문제를 정확하게 푸는 것은 매우 어렵다. 따라서 PGD가 항상 전역 최적해(global optimum)를 찾는다고 보장할 수는 없다.
+
+그러나 논문에서는 `randomly re-started PGD`를 사용하여 이 문제를 실험적으로 분석하였다. 구체적으로는 허용된 perturbation 영역 내에서 여러 개의 랜덤한 초기점을 선택한 뒤 각각에 대해 PGD를 수행하였다. 그 결과 서로 다른 초기점에서 시작하더라도 최종적으로 도달한 adversarial example들의 loss 값이 매우 비슷하게 나타났다.
+
+이는 다양한 초기점에서 시작한 PGD가 일관되게 높은 loss를 갖는 해를 찾는다는 것을 의미한다. 즉, 실제 신경망의 loss landscape에서는 PGD가 내부 최적화 문제에 대한 매우 강력한 근사 해법으로 동작하며, random restart를 충분히 수행하면 최대 loss에 가까운 adversarial example을 찾을 가능성이 높다는 것을 시사한다.
+
+아래 그림은 여러 번의 random restart PGD를 수행했을 때 최종 loss 값들이 비슷한 수준으로 수렴하는 모습을 보여준다.
+
+<img src="https://ekspertos.github.io/assets/img/review/Adversarial/PGD_LossLandscape.jpg" width="400">
+
+또한 adversarial training을 수행한 이후에는 이러한 최대 loss 값 자체가 감소하는 경향을 보인다. 이는 모델이 perturbation에 대해 덜 민감하도록 학습되었음을 의미한다. 다시 말해 허용된 perturbation 범위 내에서 공격자가 loss를 크게 증가시키기 어려워지며, 결과적으로 모델의 adversarial robustness가 향상된다.
+
+이러한 관찰은 adversarial training의 내부 최적화 문제를 PGD로 근사하는 것이 합리적임을 뒷받침한다. **비록 PGD가 전역 최적해를 찾는다고 보장할 수는 없지만, 다양한 초기점에서 시작한 PGD가 일관되게 비슷한 수준의 높은 loss에 도달한다는 사실은 더 좋은 adversarial example을 놓쳤을 가능성이 크지 않음을 시사한다.** 따라서 저자들은 PGD를 '**first-order adversary에 대한 보편적인(universal) 공격 방법으로 간주**하고, 이를 이용하여 모델의 adversarial robustness를 평가하고 학습하였다.
+
+---
+
+### 3.2. Adversarial Training
+
+PGD를 이용하여 inner maximization 문제를 근사적으로 해결한 뒤, 해당 perturbation에 대해 모델 파라미터 $\theta$를 최적화하는 것이 adversarial training의 목표이다.
+
+$$
+\min_\theta
+\max_{\delta \in S}
+L(\theta, x+\delta, y)
+$$
+
+이를 최적화하기 위해서는 다음 gradient를 계산해야 한다.
+
+$$
+\nabla_\theta
+\max_{\delta\in S}
+L(\theta,x+\delta,y)
+$$
+
+먼저 inner maximization의 해를
+
+$$
+\delta^*(\theta)
+=
+\arg\max_{\delta\in S}
+L(\theta,x+\delta,y)
+$$
+
+라고 정의하면 목적함수는 다음과 같이 쓸 수 있다.
+
+$$
+\min_\theta
+L(\theta,x+\delta^*(\theta),y)
+$$
+
+따라서 필요한 gradient는
+
+$$
+\nabla_\theta
+L(\theta,x+\delta^*(\theta),y)
+$$
+
+이다.
+
+여기서 $\delta^*$는 $\theta$에 의존하므로 chain rule을 적용하면 $\frac{\partial \delta^*}{\partial \theta}$ 항이 등장한다.
+
+그러나 $\delta^*(\theta)$는 또 다른 최적화 문제의 해이기 때문에 $\frac{\partial \delta^*}{\partial \theta}$를 직접 계산하는 것은 매우 어렵다.
+
+이때 Danskin's theorem을 사용할 수 있다. Danskin's theorem에 따르면 일정한 조건 하에서
+
+$$
+\nabla_\theta
+\max_{\delta\in S}
+L(\theta,x+\delta,y)
+=
+\nabla_\theta
+L(\theta,x+\delta^*(\theta),y)
+$$
+
+가 성립한다.
+
+즉, $\frac{\partial \delta^*}{\partial \theta}$를 계산하지 않고도 gradient를 구할 수 있으며, $\delta^*$를 상수처럼 취급한 채 미분해도 올바른 gradient를 얻을 수 있다.
+
+따라서 adversarial training은 다음과 같이 수행된다.
+
+1. PGD를 이용하여 inner maximization 문제를 근사적으로 해결한다.
+2. 얻어진 $\delta^*$를 고정한 상태에서
+3. $\nabla_\theta L(\theta,x+\delta^*,y)$를 계산하여 SGD를 수행한다.
+4. 
+
+엄밀하게는 Danskin's theorem은 $f(\theta,\delta)$가 $\theta$에 대해 미분 가능하고, inner maximization의 global maximizer $\delta^* \in \arg\max_{\delta \in S} f(\theta,\delta)$가 존재함을 가정한다.
+
+그러나 실제 adversarial training에서는 이 가정을 그대로 만족시키기 어렵다.  
+inner maximization은 일반적으로 non-convex 문제이며, PGD를 통해 근사적으로 해결된다.  
+이때 얻어지는 $\delta^*$는 global maximizer가 아니라 PGD에서의 초기화와 반복적인 perturbation 과정에 의해 결정되는 근사해이다.
+
+또한 신경망은 ReLU와 같이 비미분 가능한 지점을 포함하지만,
+이러한 지점들은 거의 모든 곳에서 무시할 수 있는 집합(measure zero)이므로
+실제 최적화에서는 subgradient 관점으로 다뤄진다.
+
+따라서 adversarial training은 Danskin’s theorem의 엄밀한 조건을 그대로 만족하지는 않지만,
+PGD가 충분히 강한 adversarial example을 생성한다는 경험적 근거를 바탕으로
+해당 형태의 gradient update를 사용한다.
+
+---
+
+### 3.3. Code Implementation
+
+정확한 구현은 아니지만 PGD adversarial training은 아래와 같은 형태로 구현할 수 있다.
+
+```python
+# inner maximization
+for _ in range(num_steps):
+    loss_adv = criterion(model(x_adv), y)
+    grad = torch.autograd.grad(loss_adv, x_adv)[0]
+    x_adv = x_adv + alpha * grad.sign()
+
+    # projection step
+    x_adv = torch.clamp(x_adv, x - eps, x + eps)  
+    x_adv = torch.clamp(x_adv, 0.0, 1.0).detach()
+
+# outer minimization
+logits = model(x_adv)
+loss = criterion(logits, y)
+
+optimizer.zero_grad()
+loss.backward()
+optimizer.step()
+```
+
 
 
 
