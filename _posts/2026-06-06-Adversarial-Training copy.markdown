@@ -667,20 +667,17 @@ $$
 L(\theta,x+\delta^*(\theta),y)
 $$
 
-따라서 필요한 gradient는
+따라서 필요한 gradient는 아래와 같다.
 
 $$
 \nabla_\theta
 L(\theta,x+\delta^*(\theta),y)
 $$
 
-이다.
+여기서 $\delta *$ 는 $\theta$ 에 의존하므로 chain rule을 적용하면 $\partial\delta * / \partial\theta$ 항이 등장한다. 
+그러나 $\delta *$ 는 또 다른 최적화 문제의 해이기 때문에 $\partial\delta * / \partial\theta$ 를 직접 계산하는 것은 매우 어렵다.
 
-여기서 $\delta^*$는 $\theta$에 의존하므로 chain rule을 적용하면 $\frac{\partial \delta^*}{\partial \theta}$ 항이 등장한다.
-
-그러나 $\delta^*(\theta)$는 또 다른 최적화 문제의 해이기 때문에 $\frac{\partial \delta^*}{\partial \theta}$를 직접 계산하는 것은 매우 어렵다.
-
-이때 Danskin's theorem을 사용할 수 있다. Danskin's theorem에 따르면 일정한 조건 하에서
+이때 Danskin's theorem을 사용할 수 있다. Danskin's theorem에 따르면 일정한 조건 하에서 아래가 성립한다
 
 $$
 \nabla_\theta
@@ -691,16 +688,13 @@ L(\theta,x+\delta,y)
 L(\theta,x+\delta^*(\theta),y)
 $$
 
-가 성립한다.
-
-즉, $\frac{\partial \delta^*}{\partial \theta}$를 계산하지 않고도 gradient를 구할 수 있으며, $\delta^*$를 상수처럼 취급한 채 미분해도 올바른 gradient를 얻을 수 있다.
+즉, $\partial\delta* / \partial\theta$ 를 계산하지 않고도 gradient를 구할 수 있으며, $\delta^*$를 상수처럼 취급한 채 미분해도 올바른 gradient를 얻을 수 있다.
 
 따라서 adversarial training은 다음과 같이 수행된다.
 
 1. PGD를 이용하여 inner maximization 문제를 근사적으로 해결한다.
 2. 얻어진 $\delta^*$를 고정한 상태에서
 3. $\nabla_\theta L(\theta,x+\delta^*,y)$를 계산하여 SGD를 수행한다.
-4. 
 
 엄밀하게는 Danskin's theorem은 $f(\theta,\delta)$가 $\theta$에 대해 미분 가능하고, inner maximization의 global maximizer $\delta^* \in \arg\max_{\delta \in S} f(\theta,\delta)$가 존재함을 가정한다.
 
@@ -742,18 +736,8 @@ loss.backward()
 optimizer.step()
 ```
 
+<hr style="border: 2.5px solid #ddd;">
 
-
-
-
----
----
-
-## 4. Adversarial Patch (2018) — 1.8k citations
-
-예시 논문
-
----
 ---
 
 
