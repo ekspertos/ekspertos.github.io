@@ -788,6 +788,20 @@ Differential Privacy의 기본 개념과 실제로 어떻게 프라이버시를 
 
 ### 4.2. Post Processing Property
 
+<img src="https://ekspertos.github.io/assets/img/review/Adversarial/Post_Processing_Property.jpg" width=400>
+
+
+---
+
+
+
+### 4.3. 
+
+
+
+
+
+
 
 
 <hr style="border: 2.5px solid #ddd;">
