@@ -133,8 +133,20 @@ Central Differential Privacy(CDP)는 사용자의 원본 데이터를 신뢰할 
 ### 3.1. Understanding Aggregate Trends for Apple Intelligence Using Differential Privacy
 
 
-<img src="https://ekspertos.github.io/assets/img/review/Adversarial/Differential_Privacy.jpg" width="400">
+#### GEnmoji: AI-generated emojis created using Apple Intelligence
 
+Apple은 Genmoji와 같은 서비스를 개선하기 위해 사용자들이 어떤 종류의 프롬프트를 자주 사용하는지 파악할 필요가 있다. 예를 들어 `"dinosaur in a cowboy hat"` 과 같이 여러 개의 객체가 포함된 요청이 빈번하게 사용된다면, Apple은 이러한 유형의 요청에 대한 모델의 성능을 평가하고 개선할 수 있다.
+
+<img src="https://ekspertos.github.io/assets/img/review/Adversarial/Differential_Privacy_Apple_1.jpg" width="400">
+
+하지만 사용자의 프롬프트를 그대로 수집한다면 개인정보 침해 문제가 발생할 수 있다. 이를 방지하기 위해 Apple은 Local Differential Privacy를 사용한다. 사용자가 입력한 프롬프트는 기기 내부에서 먼저 무작위화된 뒤 서버로 전송되며, Apple은 특정 사용자가 어떤 프롬프트를 입력했는지 알 수 없다.
+
+대신 수많은 사용자의 데이터를 통계적으로 집계하여 자주 사용되는 프롬프트의 경향만 파악할 수 있다. 따라서 널리 사용되는 요청 패턴은 분석할 수 있지만, 특정 사용자만 입력한 희귀한 프롬프트나 개별 사용자의 입력 내용은 복원할 수 없다. 또한 수집된 정보는 IP 주소나 Apple ID와 연결되지 않기 때문에 특정 사용자나 특정 기기를 식별하는 것도 불가능하다.
+
+####
+
+ 
+<img src="https://ekspertos.github.io/assets/img/review/Adversarial/Differential_Privacy_Apple_2.jpg" width="400">
 
 
 https://machinelearning.apple.com/research/differential-privacy-aggregate-trends
