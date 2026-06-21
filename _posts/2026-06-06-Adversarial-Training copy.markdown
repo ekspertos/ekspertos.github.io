@@ -834,8 +834,157 @@ $$
 
 이를 정리하면 최종적으로 **Expected Output Stability Bound**를 얻을 수 있다.
 
+---
+
+### 4.4. Robustness Condition
+
+이제 expectation 관점에서 robustness condition을 다시 표현해보자.
+기존의 deterministic condition은 아래와 같다.
+
+$$
+y_k(x+\alpha) > \max_{i \ne k} y_i(x+\alpha)
+$$
+
+이를 expectation으로 확장하면 아래와 같은 형태의 조건을 고려할 수 있다.
+
+$$
+\mathbb{E}[A_k(x+\alpha)] > e^{2\epsilon}\max_{i \ne k} \mathbb{E}[A_i(x+\alpha)] + (1+e^\epsilon)\delta
+$$
 
 
+즉, differential privacy를 만족하는 경우 위와 같은 형태의 robustness condition이 성립함을 보일 수 있다.
+이 조건이 성립하면, label probability vector $y(x) = (E[A_1(x)], \ldots, E[A_K(x)])$를 기반으로 하는 multiclass classification model은 **입력 $x$에 가해지는 perturbation $\|\alpha\|_p \le 1$ 공격에 대해 robustness를 갖는다**.
+
+
+이를 보이기 위해 DP 정의로부터 아래의 두 inequality를 사용한다.
+
+$$
+\mathbb{E}[A_i(x)] \le e^{\epsilon} \mathbb{E}[A_i(x+\alpha)] + \delta
+$$
+
+
+$$
+\mathbb{E}[A_i(x+\alpha)] \ge e^{-\epsilon}\big(\mathbb{E}[A_i(x)] - \delta\big)
+$$
+
+이제 이를 클래스별로 나누어 살펴보자.
+
+
+**(1) 정답 클래스 $k$**
+
+정답 클래스에 대해서는 아래의 lower bound가 성립한다.
+
+$$
+\mathbb{E}[A_k(x+\alpha)] \ge e^{-\epsilon}\big(\mathbb{E}[A_k(x)] - \delta\big)
+$$
+
+여기서는 **정답 클래스의 값을 최대한 크게 유지하는 것이 중요하므로 lower bound를 사용**한다.
+
+
+**(2) 비정답 클래스 $i \ne k$**
+
+비정답 클래스에 대해서는 아래의 upper bound가 성립한다.
+
+$$
+\mathbb{E}[A_i(x+\alpha)] \le e^{\epsilon}\mathbb{E}[A_i(x)] + \delta
+$$
+
+여기서는 **비정답 클래스의 값을 최대한 작게 유지하는 것이 중요하므로 upper bound를 사용**한다.
+따라서 모든 비정답 클래스에 대해 다음 inequality를 얻는다.
+
+$$
+\max_{i \ne k} \mathbb{E}[A_i(x+\alpha)]
+\le
+e^{\epsilon}\max_{i \ne k} \mathbb{E}[A_i(x)] + \delta
+$$
+
+따라서, **정답 클래스의 lower bound가 비정답 클래스의 upper bound보다 크다면 robustness가 보장이 된다**.
+즉, 아래의 inequality가 성립하면 된다.
+
+$$
+e^{-\epsilon}\big(\mathbb{E}[A_k(x)] - \delta\big)
+>
+e^{\epsilon}\max_{i \ne k} \mathbb{E}[A_i(x)] + \delta
+$$
+
+이 조건을 정리하면 처음에 제시한 expectation 기반 robustness condition을 얻을 수 있다.
+
+---
+
+### 4.5. PixelDP Certified Defense Architecture
+PixelDP는 differential privacy (DP)를 neural network에 적용한 certified defense 방법으로, 각 layer의 sensitivity에 비례하여 noise를 추가함으로써 전체 모델이 $(\epsilon, \delta)$-DP를 만족하도록 설계된다.
+
+이때 중요한 성질은 **post-processing property**이다. 이는 DP를 만족하는 출력에 대해 이후의 deterministic한 연산(추가적인 neural network layer 등)을 적용하더라도 DP 성질이 유지된다는 의미이다. 따라서 특정 layer까지 $(\epsilon, \delta)$-DP가 성립하면, 그 이후의 layer 출력 또한 동일한 DP 보장을 유지한다.
+이 성질 때문에, 우리는 noise를 어디에 추가할지와 sensitivity를 어떻게 정의할지를 신중하게 선택해야 한다. 즉, **DP 보장을 만족시키면서도 성능 손실을 최소화할 수 있는 위치를 찾는 것이 핵심이다.**
+예를 들어, 단순히 입력 이미지에 noise를 추가하는 경우 sensitivity는 $\Delta_{p,q} = 1$로 설정된다. 이는 가장 단순한 설정이지만, 입력 단계에서부터 정보를 직접 훼손하기 때문에 모델 성능(utility)이 크게 저하될 수 있다.
+따라서 noise injection 위치는 sensitivity를 얼마나 잘 계산할 수 있는지와, 동시에 performance loss를 얼마나 줄일 수 있는지 사이의 trade-off 문제로 볼 수 있다.
+
+sensitivity는 아래와 같이 정의된다.
+
+$$
+\Delta_{p,q} = \Delta_{p,q}^g
+= \max_{x,x' : x \ne x'} \frac{\|g(x) - g(x')\|_q}{\|x - x'\|_p}
+$$
+
+논문에서는 noise를 추가하는 위치에 따라 sensitivity가 달라지는 네 가지 경우를 고려한다.
+
+1. **Noise in Image** : sensitivity $\Delta_{p,q} = 1$  
+2. **Noise after First Layer**  
+3. **Noise Deeper in the Network** : sensitivity bounding이 어려움  
+4. **Noise in Auto-encoder**
+
+<img src="https://ekspertos.github.io/assets/img/review/Adversarial/PixelDP.jpg" width="500">
+
+각 설정마다 sensitivity를 계산하는 방법은 구조에 따라 달라지며, 이는 논문에서 상세히 다룬다.
+
+이렇게 계산된 sensitivity를 기반으로 noise scale을 설정하면, DP 이론에 따라 전체 시스템이 $(\epsilon, \delta)$-DP를 만족하게 된다.
+여기서 **noise로는 Gaussian 또는 Laplacian mechanism을 사용할 수 있다**.
+
+---
+
+#### 4.5.1 Laplacian Mechanism
+
+Laplacian mechanism은 평균이 0인 Laplace 분포에서 noise를 샘플링하는 방법이다.  
+이때 noise의 scale은 다음과 같이 설정된다:
+
+$$
+\sigma = \frac{\sqrt{2}\,\Delta_{p,1}L}{\epsilon}
+$$
+
+이 메커니즘은 $(\epsilon, 0)$-DP를 보장한다.
+
+---
+
+#### 4.5.2 Gaussian Mechanism
+
+Gaussian mechanism은 평균이 0인 Gaussian 분포에서 noise를 샘플링하는 방법이다.  
+이때 noise의 scale은 다음과 같이 설정된다:
+
+$$
+\sigma = \frac{2\ln(1.25/\delta)\,\Delta_{p,2}L}{\epsilon}
+$$
+
+이 메커니즘은 $(\epsilon, \delta)$-DP를 보장하며, 일반적으로 $\epsilon \le 1$인 경우에 성립한다.
+
+
+---
+
+### 4.6. Training PixelDP
+
+원칙적으로 DP는 별도의 학습 과정 없이도 적용이 가능하다. 즉, 각 layer의 sensitivity를 계산한 뒤 그에 비례하는 noise를 추가하면 이론적으로 $(\epsilon, \delta)$-DP를 만족시킬 수 있다.
+하지만 실제로는 이 과정이 단순하지 않다. 그 이유는 아무 제약 없이 학습된 neural network의 경우, layer의 sensitivity가 매우 크게 증가할 수 있기 때문이다. 이 경우 DP를 만족시키기 위해 필요한 noise scale 또한 커지게 되고, 결과적으로 입력 신호에 비해 noise가 상대적으로 커지면서 classification accuracy가 크게 감소하거나 decision boundary가 불안정해지는 문제가 발생한다.
+따라서 **실용적으로 PixelDP를 적용하기 위해서는 sensitivity 자체를 제한하는 추가적인 training 과정이 필요하다**.
+이를 위해 논문에서는 $p, q$ norm 설정에 따라 다양한 방식의 constraint를 적용한다. 
+
+**예를 들어** $\Delta_{1,1}$, $\Delta_{1,2}$, $\Delta_{\infty,\infty}$**의 경우** linear layer의 row 또는 column을 normalize하여 sensitivity를 제한하고, fixed noise variance 하에서 standard optimization (SGD)을 수행한다.
+
+**한편** $\Delta_{2,2}$**의 경우** 에는 SGD 이후마다 projection step을 적용하여 weight matrix를 특정 constraint set으로 사상한다. 이를 통해 pre-noise layer들이 Parseval tight frame을 만족하도록 만든다. 결과적으로 $\Delta_{2,2} = 1$이 되도록 강제할 수 있다.
+
+---
+
+### 4.7. PixelDP Inference
+
+Inference 단계에서는 noisy model output $A(x)$의 expectation $\mathbb{E}[A(x)]$를 직접 계산할 수 없기 때문에, Monte Carlo sampling을 통해 이를 근사한 뒤 각 class에 대한 expected probability를 비교하여 최종 label을 결정한다.
 
 <hr style="border: 2.5px solid #ddd;">
 
