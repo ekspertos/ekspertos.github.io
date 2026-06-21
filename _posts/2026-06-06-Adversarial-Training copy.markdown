@@ -86,9 +86,9 @@ Adversarial example 연구는 공격 기법의 발전과 방어 기법의 발전
 
     Adversarial example이 단순한 모델의 버그가 아니라 `모델이 학습한 non-robust feature의 결과라고 주장`하였다. 인간과 모델이 서로 다른 특징을 활용한다는 관점을 제시하며 adversarial example의 원인을 새롭게 해석하였다.
 
+<hr style="border: 2.5px solid #ddd;">
 
 ---
-
 
 ## 1. Explaining and Harnessing Adversarial Examples (2014) — 20.6k citations
 
@@ -248,7 +248,7 @@ $$
 결과적으로 logistic regression에서는 gradient의 부호를 구하는 것이 가중치의 부호를 구하는 것과 본질적으로 동일하다는 것을 보였다. 
 즉, 클래스 라벨 $y$에 따라 전체 방향만 반전될 뿐, **FGSM이 사용하는 gradient의 sign은 weight의 sign과 같은 방향 정보를 담게된다.**
 
----p=
+---
 
 ### 1.2. Adversarial Training of Linear Models Versus Weight Decay
 
@@ -350,6 +350,8 @@ $$
 
 
 <hr style="border: 2.5px solid #ddd;">
+
+---
 
 
 
@@ -570,6 +572,8 @@ for i in range(iter):
 
 <hr style="border: 2.5px solid #ddd;">
 
+---
+
 ## 3. Towards Deep Learning Models Resistant to Adversarial Attacks (2017) — 19.6k citations
 
 FGSM은 gradient 방향으로 단 한 번만 이동하기 때문에, 주어진 perturbation budget 내에서 가장 강력한 adversarial example을 찾는다고 보장할 수 없다. 즉, 동일한 $\epsilon$-ball 내부에 더 큰 loss를 유발하는 adversarial example이 존재하더라도 이를 발견하지 못할 수 있다.
@@ -740,8 +744,7 @@ optimizer.step()
 
 ---
 
-
-## 5. Certified Robustness to Adversarial Examples with Differential Privacy (2018) - 1.4k citations
+## 4. Certified Robustness to Adversarial Examples with Differential Privacy (2018) - 1.4k citations
 
 기존 adversarial training 기법들은 알려진 공격 기법에 대해 강건한 모델을 만드는 것을 목표로 하였다. 이러한 방법들은 경험적으로 강한 성능을 보일 수 있지만, 더 강력한 공격이 등장하면 취약해질 수 있다. 즉, 대부분의 adversarial training은 `best-effort robustness`를 제공한다.
 
@@ -751,56 +754,81 @@ optimizer.step()
 
 논문의 주요 기여는 다음과 같다.
 
-1. Differential Privacy를 활용하여 provable robustness를 제공하는 방어 기법(PixelDP)을 제안
+1. Differential Privacy를 활용하여 provable robustness를 제공하는 방어 기법 **PixelDP**을 제안
 2. 대규모 신경망에도 적용 가능한 scalable한 certified defense framework 제시
 3. 특정 $L_2$ 및 $L_1$ perturbation 범위에 대해 robustness certificate를 제공
 
+---
 
+### 4.1. What is Differential Privacy
 
+Differential Privacy(DP)는 **한 사람의 데이터가 있든 없든 분석 결과가 거의 같게 나오도록 만드는 프라이버시 보호 기법**이다.
 
+예를 들어 어떤 기관이 데이터 분석 결과를 공개한다고 하자. 공격자는 이 결과를 이용해 특정 사람이 데이터베이스에 포함되어 있는지 추론하려고 할 수 있다. DP의 목표는 이러한 추론을 어렵게 만드는 것이다. 이를 위해 알고리즘의 결과에 적절한 무작위성을 추가하여, 한 사람의 데이터를 추가하거나 제거하더라도 결과가 크게 달라지지 않도록 만든다.
 
+수학적으로, 알고리즘 $A$가 데이터베이스 $d$를 입력받아 출력 공간 $O$의 값을 반환한다고 하자. 이때 $A$가 $(\epsilon,\delta)$-DP가 만족한다는 것은 distance metric $\rho$에 대해 $\rho(d,d') \le 1$인 임의의 두 데이터베이스 $d,d'$와 모든 $S \subseteq O$에 대하여 아래가 성립함을 의미한다.
 
+$$
+P(A(d)\in S)
+\le
+e^\epsilon P(A(d')\in S)
++
+\delta.
+$$
 
+여기서 $\delta \in [0,1]$이다.
 
+일반적으로 $\rho$로는 Hamming distance를 사용하며, 이는 두 데이터베이스가 최대 한 개의 레코드에서만 차이가 난다는 의미이다. 따라서 DP를 만족하는 알고리즘은 특정 개인의 데이터를 추가하거나 제거하더라도 출력 분포가 크게 변하지 않는다.
+즉, **$A$의 결과를 관찰하더라도 특정 개인의 데이터가 사용되었는지 여부를 알아내기 어렵게 된다**.
 
-
-
+Differential Privacy의 기본 개념과 실제로 어떻게 프라이버시를 보호하는지에 대해서는 [이 글](https://ekspertos.github.io/projects/2026/06/19/Differential-Privacy/)에서 자세히 다루었다.
 
 
 ---
+
+### 4.2. Post Processing Property
+
+
+
+<hr style="border: 2.5px solid #ddd;">
+
 ---
 
-## 6. Constructing Unrestricted Adversarial Examples with Generative Models (2018) — 0.4k citations
+## 5. Constructing Unrestricted Adversarial Examples with Generative Models (2018) — 0.4k citations
 
 GAN으로 adversarial example을 생성
 
 그렇기 때문에 restricted bound를 사용 안함
 
 
----
+<hr style="border: 2.5px solid #ddd;">
+
 ---
 
-## 7. Obfuscated Gradients Give a False Sense of Security (2018) — 4.4k citations
+## 6. Obfuscated Gradients Give a False Sense of Security (2018) — 4.4k citations
 
 gradient를 숨기는 obfuscated gradent를 사용하는 것은 제대로된 robust model을 만드는 것이 아니라 꼼수를 사용하는거다 
 
----
+<hr style="border: 2.5px solid #ddd;">
+
 ---
 
 
-## 8. Adversarial Examples Are Not Bugs, They Are Features (2019) — 2.7k citations
+## 7. Adversarial Examples Are Not Bugs, They Are Features (2019) — 2.7k citations
 
 Adversarial example이 발생하는 것은 이미지에 non-robust feature 때문이다.
 
----
----
-
-## 9. Reliable Evaluation of Adversarial Robustness with an Ensemble of Diverse Parameter-free Attacks (2020) — 3.0k citations
+<hr style="border: 2.5px solid #ddd;">
 
 ---
+
+## 8. Reliable Evaluation of Adversarial Robustness with an Ensemble of Diverse Parameter-free Attacks (2020) — 3.0k citations
+
+<hr style="border: 2.5px solid #ddd;">
+
 ---
 
-## 10. Square Attack: A Query-Efficient Black-Box Adversarial Attack via Random Search — 1.7k citations
+## 9. Square Attack: A Query-Efficient Black-Box Adversarial Attack via Random Search — 1.7k citations
 
 
 
