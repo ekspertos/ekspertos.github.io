@@ -778,28 +778,61 @@ $$
 
 여기서 $\delta \in [0,1]$이다.
 
-일반적으로 $\rho$로는 Hamming distance를 사용하며, 이는 두 데이터베이스가 최대 한 개의 레코드에서만 차이가 난다는 의미이다. 따라서 DP를 만족하는 알고리즘은 특정 개인의 데이터를 추가하거나 제거하더라도 출력 분포가 크게 변하지 않는다.
+일반적으로 $\rho$로는 Hamming distance를 사용하며, 이는 두 데이터베이스가 최대 한 개의 레코드 (row)에서만 차이가 난다는 의미이다. 따라서 DP를 만족하는 알고리즘은 특정 개인의 데이터를 추가하거나 제거하더라도 출력 분포가 크게 변하지 않는다.
 즉, **$A$의 결과를 관찰하더라도 특정 개인의 데이터가 사용되었는지 여부를 알아내기 어렵게 된다**.
 
 Differential Privacy의 기본 개념과 실제로 어떻게 프라이버시를 보호하는지에 대해서는 [이 글](https://ekspertos.github.io/projects/2026/06/19/Differential-Privacy/)에서 자세히 다루었다.
 
+`Certified Robustness`에서는 **데이터베이스를 이미지로, 레코드를 픽셀로 해석하여 DP의 개념을 적용**한다. 따라서 몇 개의 픽셀이 변경되더라도 모델의 출력 분포가 크게 변하지 않도록 만들며, 이를 통해 입력 변화에 대한 강건성을 보장한다.
+
+DP를 만족하는 알고리즘은 잘 알려진 **Post-Processing Property**를 만족하며, 더 나아가 이 논문에서 제시하는 **expected output stability bound** 역시 만족한다.
 
 ---
 
 ### 4.2. Post Processing Property
 
-<img src="https://ekspertos.github.io/assets/img/review/Adversarial/Post_Processing_Property.jpg" width=400>
+$(\epsilon,\delta)$-DP 알고리즘의 출력에 적용되는 어떠한 연산도 $(\epsilon,\delta)$-DP 보장을 훼손하지 않는다.
+
+<img src="https://ekspertos.github.io/assets/img/review/Adversarial/Post_Processing_Property.jpg" width=250>
+
 
 
 ---
+### 4.3. Expected Output Stability Bound
 
+출력값이 **$[0,b]$ 범위**에 속하는 확률적 함수 $A$가 $(\epsilon,\delta)$-DP를 만족한다고 가정하자. 그러면 $A$의 출력 기댓값은 다음과 같은 bound를 만족한다.
 
+$$
+\forall \alpha \in B_p(1), \quad
+\mathbb{E}[A(x)]
+\le
+e^{\epsilon}\mathbb{E}[A(x+\alpha)]
++
+b\delta.
+$$
 
-### 4.3. 
+이 결과는 DP의 정의와 Tail Sum Formula를 이용하여 증명할 수 있다. 먼저 출력 $A(x)$가 $[0,b]$ 구간에 bounded 되어 있다고 가정하자. 그러면 **Tail Sum Formula**에 의해 기대값은 다음과 같이 표현된다.
 
+$$
+\mathbb{E}[A(x)]
+=
+\int_0^b P(A(x) > t)\,dt.
+$$
 
+<img src="https://ekspertos.github.io/assets/img/review/Adversarial/Tail_Sum_Formula.jpg" width=400>
 
+이제 DP 정의를 이용하면 아래의 부등식을 얻을 수 있다.
 
+$$
+\int_0^b P(A(x)>t)\,dt
+\le
+e^\epsilon
+\int_0^b P(A(x+\alpha)>t)\,dt
++
+\int_0^b \delta\,dt.
+$$
+
+이를 정리하면 최종적으로 **Expected Output Stability Bound**를 얻을 수 있다.
 
 
 
