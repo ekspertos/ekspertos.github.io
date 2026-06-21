@@ -625,7 +625,7 @@ $$
 
 아래 그림은 여러 번의 random restart PGD를 수행했을 때 최종 loss 값들이 비슷한 수준으로 수렴하는 모습을 보여준다.
 
-<img src="https://ekspertos.github.io/assets/img/review/Adversarial/PGD_LossLandscape.jpg" width="400">
+<img src="https://ekspertos.github.io/assets/img/review/Adversarial/PGD_LossLandscape.jpg" width="500">
 
 또한 adversarial training을 수행한 이후에는 이러한 최대 loss 값 자체가 감소하는 경향을 보인다. 이는 모델이 perturbation에 대해 덜 민감하도록 학습되었음을 의미한다. 다시 말해 허용된 perturbation 범위 내에서 공격자가 loss를 크게 증가시키기 어려워지며, 결과적으로 모델의 adversarial robustness가 향상된다.
 
@@ -743,7 +743,28 @@ optimizer.step()
 
 ## 5. Certified Robustness to Adversarial Examples with Differential Privacy (2018) - 1.4k citations
 
-Certified Robustness 논문
+기존 adversarial training 기법들은 알려진 공격 기법에 대해 강건한 모델을 만드는 것을 목표로 하였다. 이러한 방법들은 경험적으로 강한 성능을 보일 수 있지만, 더 강력한 공격이 등장하면 취약해질 수 있다. 즉, 대부분의 adversarial training은 `best-effort robustness`를 제공한다.
+
+반면 이 논문은 특정 perturbation 범위 내에서 모델의 예측이 변하지 않음을 수학적으로 보장하는 `certified robustness`를 목표로 한다. 다시 말해, 주어진 입력 주변의 특정 영역 안에는 adversarial example이 존재하지 않음을 증명할 수 있는 모델을 구축한다.
+
+저자들은 이러한 보장을 얻기 위해 Differential Privacy(DP)의 안정성(stability) 이론을 활용한다. 원래 DP는 데이터베이스의 개별 레코드가 결과에 미치는 영향을 제한하여 개인정보를 보호하기 위해 제안된 개념이다. 본 논문은 DP의 민감도 분석을 입력 공간에 적용하여 robustness certificate를 도출한다. 구현 측면에서는 모델의 중간 계층에 노이즈를 주입하는 방식으로 이루어지며, 이는 이후의 randomized smoothing 계열 방법과도 밀접한 관련이 있다.
+
+논문의 주요 기여는 다음과 같다.
+
+1. Differential Privacy를 활용하여 provable robustness를 제공하는 방어 기법(PixelDP)을 제안
+2. 대규모 신경망에도 적용 가능한 scalable한 certified defense framework 제시
+3. 특정 $L_2$ 및 $L_1$ perturbation 범위에 대해 robustness certificate를 제공
+
+
+
+
+
+
+
+
+
+
+
 
 
 ---
