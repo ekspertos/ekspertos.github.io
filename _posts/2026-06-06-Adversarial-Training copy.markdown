@@ -1197,20 +1197,14 @@ $$
 
 ### 6.4. Case Study
 
-논문에서는 아래의 논문들에 ㅐㄷ해서 공략한다 더 자세한건 논문을 읽어보길 추천한다.
+논문에서는 아래의 방어 기법들을 분석하고, 각각에 대한 공격 방법을 제시한다. 자세한 내용은 원문 논문을 참고하기 바란다.
 
 * **Thermometer Encoding: One Hot Way to Resist Adversarial Examples(2018) — 0.8k citations**
-
 * **Countering Adversarial Images using Input Transformations (2017) — 2.1k citations**
-
 * **Characterizing Adversarial Subspaces Using Local Intrinsic Dimensionality (2018) — 1k citations**
-
 * **Stochastic Activation Pruning for Robust Adversarial Defense (2018) — 0.8k citations**
-
 * **Mitigating Adversarial Effects Through Randomization (2017) — 1.6k citations**
-
 * **PixelDefend: Leveraging Generative Model to Understand and Defend Against Adversarial Examples (2018) — 1.1k citations**
-
 * **DefenceGAN: Protecting Classifiers Against Adversarial Attacks using GANs (2018) — 1.7k citations**
 
 
