@@ -1241,12 +1241,41 @@ $$
 
 ---
 
-### 7.1.
+### 7.1. The Robust Features Model
 
-표준 학습을 하면, 모델은 정확도를 높이기 위해서 non-robust feature을 적극적으로 사용한다.
+Robust feature랑 non-robust feature를 구분하는 방법을 알아보자.
+우리는 Binary Classification을 고려한다.
 
-즉, adversarial example 들은 모델이 강하게 활용하는 non-robust 하지만 predictive 한 특성 방향에서 가장 쉽게 생성된다.
-predictive 특성이란 라벨을 예측하는데 도움되는 특징이다.
+feature란 입력 공간 $X$의 데이터를 받아 하나의 실수값을 출력하는 함수이다.
+
+예를 들어 이미지 분류 문제에서 입력 $x$가 이미지라면 다음과 같은 것들이 모두 feature가 될 수 있다.
+
+- 귀의 뾰족한 정도
+- 털의 질감
+- 특정 방향의 edge 강도
+- 특정 CNN neuron의 activation 값
+
+
+그렇다면 useful, robust, 그리고 non-robust feature을 어떻게 구분할지 알아보자.
+
+#### 7.1.1. $\rho$-useful features
+
+$$
+\mathbb{E}_{(x,y)\sim D}[y \cdot f(x)] \geq \rho
+$$
+
+#### 7.1.2 $\gamma$-robustly useful features
+
+$$
+\mathbb{E}_{(x,y)\sim D}[ \inf_{\delta \in \triangle(x)}  y \cdot f(x+\delta)] \geq \gamma
+$$
+
+
+#### 7.1.3. Useful, non-robust features
+
+$\rho$-useful feature 이지만 $\gamma$-robust useful feature 이 아닌 경우 useful 하지만 nun-robust feature 이라고 한다.
+
+
 
 
 
