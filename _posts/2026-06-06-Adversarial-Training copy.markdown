@@ -1305,19 +1305,22 @@ $$
 
 즉, feature space에서 원본 이미지와 동일한 representation을 갖도록 이미지를 최적화하는 것이다.
 
-Adversarially trained model의 representation은 주로 robust feature를 반영하므로, 이렇게 생성된 $x_r$는 원본 이미지의 robust feature는 유지하면서 non-robust feature는 제거된 이미지로 볼 수 있다. 이를 이용해 논문은 robust dataset $\mathcal{D}_R$과 non-robust dataset $\mathcal{D}_{NR}$을 구성한다.
+Adversarially trained model의 representation은 주로 robust feature를 반영하므로, 이렇게 생성된 $x_r$는 원본 이미지의 robust feature는 유지하면서 non-robust feature는 제거된 이미지로 볼 수 있다. 
+이를 이용해 논문은 robust dataset $D_R$과 non-robust dataset $D_{NR}$을 구성한다.
 
 <img src="https://ekspertos.github.io/assets/img/review/Adversarial/AdversarialExamplesAreNotBugs_1.jpg" width="700">
 
-흥미로운 점은 non-robust feature만 포함된 $\mathcal{D}_{NR}$로 학습하더라도 높은 standard accuracy를 얻을 수 있다는 것이다. 이는 non-robust feature 역시 label 예측에 충분히 유용한 정보를 담고 있음을 보여준다.
+흥미로운 점은 non-robust feature만 포함된 $D_{NR}$로 학습하더라도 높은 standard accuracy를 얻을 수 있다는 것이다. 이는 non-robust feature 역시 label 예측에 충분히 유용한 정보를 담고 있음을 보여준다.
 
-또한 (b)의 실험에서는 dog 이미지에 cat의 non-robust feature를 주입한 뒤 해당 이미지를 cat으로 라벨링하여 학습시켰다. 그 결과 모델은 실제로 cat을 인식하는 방향으로 학습되었다. 이는 모델이 인간이 인식하는 semantic 정보보다 non-robust feature를 적극적으로 활용하고 있음을 보여주는 결과이다.
 
-다음은 $\mathcal{D}_R$과 $\mathcal{D}_{NR}$로 각각 학습한 모델의 성능이다.
+
+또한 $(b)$의 실험에서는 dog 이미지에 cat의 non-robust feature를 주입한 뒤 해당 이미지를 cat으로 라벨링하여 학습시켰다. 그 결과 모델은 실제로 cat을 인식하는 방향으로 학습되었다. 이는 모델이 인간이 인식하는 semantic 정보보다 non-robust feature를 적극적으로 활용하고 있음을 보여주는 결과이다.
+
+다음은 $D_{R}$ 과 $D_{NR}$ 로 각각 학습한 모델의 성능이다.
 
 <img src="https://ekspertos.github.io/assets/img/review/Adversarial/AdversarialExamplesAreNotBugs_2.jpg" width="700">
 
-$\mathcal{D}_R$로 학습한 모델은 adversarial training을 수행하지 않았음에도 높은 adversarial accuracy를 보인다. 반면 $\mathcal{D}_{NR}$로 학습한 모델은 standard accuracy는 높지만 adversarial perturbation에 매우 취약하다. 이는 adversarial robustness가 데이터에 포함된 robust feature와 밀접하게 연관되어 있음을 시사한다.
+$D_R$ 로 학습한 모델은 adversarial training을 수행하지 않았음에도 높은 adversarial accuracy를 보인다. 반면 $D_{NR}$ 로 학습한 모델은 standard accuracy는 높지만 adversarial perturbation에 매우 취약하다. 이는 adversarial robustness가 데이터에 포함된 robust feature와 밀접하게 연관되어 있음을 시사한다.
 
 아래 그림은 adversarial example의 transferability를 보여준다.
 
