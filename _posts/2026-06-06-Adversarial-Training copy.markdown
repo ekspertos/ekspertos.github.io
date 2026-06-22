@@ -752,7 +752,7 @@ optimizer.step()
 
 저자들은 이러한 보장을 얻기 위해 Differential Privacy(DP)의 안정성(stability) 이론을 활용한다. 원래 DP는 데이터베이스의 개별 레코드가 결과에 미치는 영향을 제한하여 개인정보를 보호하기 위해 제안된 개념이다. 본 논문은 DP의 민감도 분석을 입력 공간에 적용하여 robustness certificate를 도출한다. 구현 측면에서는 모델의 중간 계층에 노이즈를 주입하는 방식으로 이루어지며, 이는 이후의 randomized smoothing 계열 방법과도 밀접한 관련이 있다.
 
-논문의 주요 기여는 다음과 같다.
+논문의 주요 기여는 아래과 같다.
 
 1. Differential Privacy를 활용하여 provable robustness를 제공하는 방어 기법 **PixelDP**을 제안
 2. 대규모 신경망에도 적용 가능한 scalable한 certified defense framework 제시
@@ -933,7 +933,7 @@ $$
 3. **Noise Deeper in the Network** : sensitivity bounding이 어려움  
 4. **Noise in Auto-encoder**
 
-<img src="https://ekspertos.github.io/assets/img/review/Adversarial/PixelDP.jpg" width="500">
+<img src="https://ekspertos.github.io/assets/img/review/Adversarial/PixelDP.jpg" width="700">
 
 각 설정마다 sensitivity를 계산하는 방법은 구조에 따라 달라지며, 이는 논문에서 상세히 다룬다.
 
@@ -992,9 +992,92 @@ Inference 단계에서는 noisy model output $A(x)$의 expectation $\mathbb{E}[A
 
 ## 5. Constructing Unrestricted Adversarial Examples with Generative Models (2018) — 0.4k citations
 
-GAN으로 adversarial example을 생성
+기존 adversarial attack들은 $L_\infty$ 또는 $L_2$ norm constraint 하에서 입력에 작은 perturbation을 추가하여 adversarial example을 생성한다. 그러나 이러한 방식은 픽셀 단위의 작은 변화에 제한되기 때문에, 물체의 회전, 형태 변화, 스타일 변화와 같은 **semantic-level transformation**을 충분히 표현하기 어렵다.
 
-그렇기 때문에 restricted bound를 사용 안함
+이러한 한계를 해결하기 위해 본 논문은 perturbation을 직접 pixel space에서 생성하는 대신, GAN의 generator를 이용하여 data manifold 상에서 adversarial example을 생성하는 방법을 제안한다. 즉, generator $G(z)$가 학습한 자연 이미지 공간에서 latent vector $z$를 최적화하여 classifier를 속이는 이미지를 생성한다.
+
+아래에 PGD 기반 공격과 GAN 기반 공격을 비교한 결과를 보여준다.
+
+<img src="https://ekspertos.github.io/assets/img/review/Adversarial/GAN_Adversarials.jpg" width="700">
+
+그림에서 볼 수 있듯이 PGD 기반 공격은 입력 이미지에 자잘한 노이즈를 추가하여 모델을 혼란시키는 반면, GAN 기반 공격은 latent space를 조작하여 더 자연스럽고 semantic한 변형을 가진 adversarial example을 생성한다. 즉, 단순한 noise perturbation이 아니라 객체의 형태나 특징이 유지되면서도 classifier를 잘못 분류하도록 유도하는 변형이 나타난다.
+
+---
+### 5.1. Auxiliary Classifier GAN (AC-GAN)
+
+논문에서는 adversarial example 생성을 위해 GAN의 한 변형인 **Auxiliary Classifier GAN (AC-GAN) 구조를 사용**한다. AC-GAN은 conditional GAN (cGAN)을 확장한 모델로, 단순히 class 정보를 입력 조건으로 사용하는 것을 넘어, **생성된 이미지가 해당 class를 얼마나 잘 반영하는지에 대한 class consistency를 함께 학습하도록 설계된 구조**이다. 여기서 class consistency란 generator가 생성한 이미지가 주어진 class label에 대해 실제 해당 class의 이미지처럼 보이도록 만드는 성질을 의미한다.
+
+<img src="https://ekspertos.github.io/assets/img/review/Adversarial/GAN_Comparison.jpg" width="700">
+
+위 그림은 GAN, cGAN, AC-GAN의 차이를 비교한 것이다. **cGAN은** generator와 discriminator에 class label을 조건으로 함께 넣어서 특정 class의 이미지를 생성하도록 학습한다.
+**AC-GAN은** 여기서 discriminator의 구조를 한 단계 더 확장한다. 기존의 real/fake 판별 기능에 더해, 입력 이미지가 어떤 class에 속하는지를 예측하는 classification branch를 추가한다. 즉 discriminator는 아래의 두 가지 역할을 동시에 수행한다.
+
+```
+- real/fake 판별 (adversarial head)  
+- class label 예측 (auxiliary classifier head)
+```
+이 구조에서 generator는 단순히 discriminator를 속이는 것뿐만 아니라, auxiliary classifier가 올바른 class를 예측하도록 만드는 방향으로도 학습된다. 다시 말해 generator는 adversarial loss와 classification loss를 동시에 받는다.
+
+이 덕분에 AC-GAN은 cGAN보다 생성된 이미지가 특정 class의 특징을 더 잘 유지하는 경향이 있다. 즉, class consistency가 더 강하게 나타나는 generator를 학습할 수 있다.
+
+---
+
+### 5.2. Adversarial Example Generation
+
+$g_\theta(z,y)$와 $c_\phi(x)$를 각각 AC-GAN의 generator와 auxiliary classifier라고 하고, $f(x)$를 공격 대상 classifier라고 하자.
+
+Unrestricted adversarial example을 생성하기 위해 latent variable $z$를 최적화 변수로 두고, 다음 loss 함수 최소화하는 문제로 formulation한다. 
+
+$$
+L = L_0 + \lambda_1 L_1 + \lambda_2 L_2,
+$$
+
+여기서 $\lambda_1, \lambda_2$는 각 loss 항의 중요도를 조절하는 hyperparameter이다. 각 loss 항은 아래과 같이 정의된다.
+
+$$
+\begin{aligned}
+L_0 &\triangleq -\log f(y_{\text{target}} \mid g_\theta(z, y_{\text{source}})), \\
+L_1 &\triangleq \frac{1}{m} \sum_{i=1}^{m} \max\left(|z_i - z_i^0| - \epsilon, 0\right), \\
+L_2 &\triangleq -\log c_\phi\big(y_{\text{source}} \mid g_\theta(z, y_{\text{source}})\big).
+\end{aligned}
+$$
+
+각 항의 역할은 아래과 같다.
+
+- **$L_0$ (attack objective)**  
+  생성된 이미지 $g_\theta(z, y_{\text{source}})$가 target classifier $f$에 의해 target label $y_{\text{target}}$로 분류되도록 유도하는 공격 항이다.
+
+- **$L_1$ (latent space regularization)**  
+  기준 latent vector $z^0$로부터 $z$가 과도하게 벗어나지 않도록 제한하는 regularization term이다. 이를 통해 latent space에서 자연스러운 manifold를 크게 이탈하지 않으면서 adversarial example을 생성할 수 있다.
+
+- **$L_2$ (class consistency constraint)**  
+  generator의 출력이 auxiliary classifier $c_\phi$에 의해 source class $y_{\text{source}}$로 유지되도록 유도하여 AC-GAN의 class consistency를 보존한다.
+
+---
+
+### 5.3. Code Implementation
+
+정확한 구현은 아니지만 아래와 같은 형태로 구현할 수 있다.
+
+```python
+# initialize latent code
+z = torch.randn(batch_size, z_dim, requires_grad=True)
+
+optimizer = torch.optim.Adam([z], lr=1e-2)
+
+for _ in range(num_steps):
+    x = g_theta(z, y_source)
+
+    L0 = -torch.log(f(x)[..., y_target])
+    L1 = torch.mean(torch.clamp(torch.abs(z - z0) - eps, min=0))
+    L2 = -torch.log(c_phi(x)[..., y_source])
+
+    loss = L0 + lambda1 * L1 + lambda2 * L2
+
+    optimizer.zero_grad()
+    loss.backward()
+    optimizer.step()
+```
 
 
 <hr style="border: 2.5px solid #ddd;">
@@ -1003,7 +1086,135 @@ GAN으로 adversarial example을 생성
 
 ## 6. Obfuscated Gradients Give a False Sense of Security (2018) — 4.4k citations
 
-gradient를 숨기는 obfuscated gradent를 사용하는 것은 제대로된 robust model을 만드는 것이 아니라 꼼수를 사용하는거다 
+Adversarial training을 포함한 여러 방어 기법들이 iterative optimization 기반 attack에 대해 효과적으로 동작하는 것처럼 보이는 경우가 있다.  
+하지만 이는 실제로 robustness를 달성한 것이 아니라, gradient 정보를 왜곡하거나 숨기는 **obfuscated gradient** 현상에 의해 생긴 착시일 수 있음을 지적한다.
+
+이 논문은 이러한 obfuscated gradient를 크게 세 가지 유형으로 정리한다: **shattered gradients**, **stochastic gradients**, 그리고 **vanishing/exploding gradients**.  
+또한 각 유형에서 기존 gradient-based attack이 왜 실패하는지 분석하고, 이를 우회하여 공격하는 방법들을 제시한다.
+
+더 나아가 기존 방어 기법들이 실제로 어떤 방식으로 gradient를 숨기고 있는지 체계적으로 분석하며, 이러한 방어들이 실제 robustness를 제공하지 못함을 실험적으로 보여준다.
+
+논문의 주요 기여는 아래과 같다.
+
+1. 기존 방어 기법들이 공유하는 문제점(obfuscated gradients)을 유형별로 체계적으로 정리하고 분석.
+2. adversarial training을 제외한 다수의 방어 기법이 gradient masking에 해당함을 보이며 효과적으로 파훼.
+3. 미분 불가능하거나 stochastic한 방어를 공격할 수 있는 BPDA (Backward Pass Differentiable Approximation) 기법 제시.
+
+---
+
+### 6.1. Shattered Gradients
+
+일부 방어 기법은 비미분 연산을 사용하여 gradient 계산을 어렵게 만든다.
+이 경우 공격자는 정확한 gradient를 얻을 수 없기 때문에 iterative optimization 기반 공격이 제대로 동작하지 않는다.
+신경망을 아래와 같이 표현하자.
+
+$$
+f(x)=f^{j+1}(f^j(\cdots f^1(x)))
+$$
+
+만약 중간 계층 $f^i$가 미분 불가능하다면 chain rule을 적용할 수 없으므로 gradient 계산이 막히게 된다.
+이러한 현상을 논문에서는 **shattered gradient**라고 부른다.
+
+#### 6.1.1. Backward Pass Differentiable Approximation (BPDA)
+
+BPDA는 미분 불가능한 연산을 미분 가능한 함수로 근사하여 gradient를 계산하는 방법이다.
+핵심 아이디어는 forward pass와 backward pass에서 서로 다른 함수를 사용하는 것이다.
+
+Forward pass에서는 원래 연산을 그대로 사용한다.
+
+$$
+y=f^i(x)
+$$
+
+반면 backward pass에서는 이를 근사하는 미분 가능한 함수 $g(x)$를 사용한다.
+
+$$
+f^i(x)\approx g(x)
+$$
+
+즉, 실제 모델은 그대로 유지하면서 gradient 계산만 우회하는 것이다.
+근사 함수로 인해 gradient에 오차가 발생하지만, 공격에 필요한 방향 정보는 대부분 유지된다.
+실제로 논문은 많은 gradient masking 기반 방어가 BPDA만으로 쉽게 무너진다는 것을 보인다.
+
+---
+### 6.2. Stochastic Gradients
+
+일부 방어 기법은 추론 시 무작위성을 추가한다.
+예를 들어 입력을 매번 다른 각도로 회전시키거나 랜덤 노이즈를 삽입할 수 있다.
+이 경우 동일한 입력이라도 매번 다른 gradient가 계산된다.
+따라서 공격자는 어느 방향으로 입력을 업데이트해야 할지 알기 어렵다.
+
+#### 6.2.1. Expectation Over Transformation (EoT)
+
+EoT는 이러한 무작위성을 제거하려고 하지 않는다.
+대신 모든 transformation에 대한 평균적인 gradient를 이용해 공격을 수행한다.
+최적화 대상은 아래과 같다.
+
+$$
+\mathbb{E}_{t\sim T}[f(t(x))]
+$$
+
+미분과 기댓값을 교환할 수 있으므로 아래 식이 성립한다.
+
+$$
+\nabla_x \mathbb{E}_{t\sim T}[f(t(x))]
+=
+\mathbb{E}_{t\sim T}
+\left[
+\nabla_x f(t(x))
+\right]
+$$
+
+즉, 여러 transformation에 대해 gradient를 계산한 뒤 그 평균을 사용하면 된다.
+회전 방어의 경우를 생각해보면, 여러 회전 각도에서 gradient를 계산한 뒤 이를 평균내어 입력을 업데이트하는 방식이다.
+
+---
+### 6.3. Vanishing / Exploding Gradients
+
+일부 방어 기법은 gradient가 지나치게 작거나 크게 만들어 optimization을 어렵게 한다.
+이 경우 공격은 진행되더라도 업데이트가 거의 일어나지 않거나, 반대로 불안정하게 발산하게 된다.
+
+#### 6.3.1. Reparameterization
+
+논문은 이러한 문제를 해결하기 위해 최적화 변수를 다시 정의하는 reparameterization 기법을 사용한다.
+예를 들어 방어 기법이 입력에 어떤 전처리 함수 $g$를 적용한다고 하자.
+공격자는 전처리 이후의 입력을 직접 최적화하는 대신 새로운 변수 $z$를 도입한다.
+입력은 아래와 같이 표현할 수 있다.
+
+$$
+x = h(z)
+$$
+
+그러면 원래 최적화 문제인 $\max_x f(g(x))$ 를 아래와 같이 다시 쓸 수 있다.
+
+$$
+\max_z f(g(h(z)))
+$$
+
+이렇게 하면 gradient가 소실되거나 폭주하는 입력 공간을 우회하여 보다 안정적으로 최적화를 수행할 수 있다.
+즉, reparameterization의 핵심은 모델을 바꾸는 것이 아니라 공격이 수행되는 최적화 공간을 바꾸는 것이다.
+
+
+### 6.4. Case Study
+
+논문에서는 아래의 논문들에 ㅐㄷ해서 공략한다 더 자세한건 논문을 읽어보길 추천한다.
+
+* **Thermometer Encoding: One Hot Way to Resist Adversarial Examples(2018) — 0.8k citations**
+
+* **Countering Adversarial Images using Input Transformations (2017) — 2.1k citations**
+
+* **Characterizing Adversarial Subspaces Using Local Intrinsic Dimensionality (2018) — 1k citations**
+
+* **Stochastic Activation Pruning for Robust Adversarial Defense (2018) — 0.8k citations**
+
+* **Mitigating Adversarial Effects Through Randomization (2017) — 1.6k citations**
+
+* **PixelDefend: Leveraging Generative Model to Understand and Defend Against Adversarial Examples (2018) — 1.1k citations**
+
+* **DefenceGAN: Protecting Classifiers Against Adversarial Attacks using GANs (2018) — 1.7k citations**
+
+
+
 
 <hr style="border: 2.5px solid #ddd;">
 
