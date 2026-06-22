@@ -1240,50 +1240,99 @@ $$
 3. 데이터셋으로부터 robust feature와 non-robust feature를 분리하여 분석하는 방법을 제시하였다.
 
 ---
-
 ### 7.1. The Robust Features Model
 
-Robust feature랑 non-robust feature를 구분하는 방법을 알아보자.
-우리는 Binary Classification을 고려한다.
-
-feature란 입력 공간 $X$의 데이터를 받아 하나의 실수값을 출력하는 함수이다.
-
+논문에서는 robust feature와 non-robust feature를 구분하기 위해 Binary Classification 문제를 고려한다.
+Feature는 입력 공간 $X$의 데이터를 받아 하나의 실수값을 출력하는 함수이다.
 예를 들어 이미지 분류 문제에서 입력 $x$가 이미지라면 다음과 같은 것들이 모두 feature가 될 수 있다.
 
-- 귀의 뾰족한 정도
-- 털의 질감
-- 특정 방향의 edge 강도
-- 특정 CNN neuron의 activation 값
+* 귀의 뾰족한 정도
+* 털의 질감
+* 특정 방향의 edge 강도
+* 특정 CNN neuron의 activation 값
 
-
-그렇다면 useful, robust, 그리고 non-robust feature을 어떻게 구분할지 알아보자.
+중요한 점은 feature를 사람이 이해할 수 있는 semantic feature로 한정하지 않는다는 것이다. 인간이 직접 해석하기 어려운 통계적 신호 역시 모두 feature로 간주한다.
+이제 논문에서 useful feature, robust feature, 그리고 non-robust feature를 어떻게 정의하는지 살펴보자.
 
 #### 7.1.1. $\rho$-useful features
+
+다음 조건을 만족하는 feature를 $\rho$-useful feature라고 정의한다.
 
 $$
 \mathbb{E}_{(x,y)\sim D}[y \cdot f(x)] \geq \rho
 $$
 
-#### 7.1.2 $\gamma$-robustly useful features
+이는 feature $f$가 label $y$와 양의 상관관계를 가지고 있음을 의미한다. 즉, 해당 feature가 분류에 유용한 정보를 담고 있다는 뜻이다.
+
+#### 7.1.2. $\gamma$-robustly useful features
+
+다음 조건을 만족하는 feature를 $\gamma$-robustly useful feature라고 정의한다.
 
 $$
-\mathbb{E}_{(x,y)\sim D}[ \inf_{\delta \in \triangle(x)}  y \cdot f(x+\delta)] \geq \gamma
+\mathbb{E}*{(x,y)\sim D}
+\left[
+\inf*{\delta \in \Delta(x)}
+y \cdot f(x+\delta)
+\right]
+\geq \gamma
 $$
 
+여기서 $\Delta(x)$는 허용된 perturbation 집합이다.
+
+이 식은 가능한 모든 adversarial perturbation 중 가장 불리한 경우를 고려하더라도, 해당 feature가 여전히 label 예측에 도움이 되는지를 측정한다.
+즉, robustly useful feature는 작은 perturbation이 추가되어도 predictive한 성질이 유지되는 feature이다.
 
 #### 7.1.3. Useful, non-robust features
 
-$\rho$-useful feature 이지만 $\gamma$-robust useful feature 이 아닌 경우 useful 하지만 nun-robust feature 이라고 한다.
+$\rho$-useful feature이지만 $\gamma$-robustly useful feature가 아닌 경우를 useful but non-robust feature라고 정의한다.
+즉, 원래는 label 예측에 유용하지만 adversarial perturbation에 의해 그 예측력이 쉽게 무너지는 feature를 의미한다.
+다시 말해 adversarial example은 모델이 강하게 활용하는 이러한 non-robust feature를 조작함으로써 생성된다.
+
+<img src="https://ekspertos.github.io/assets/img/review/Adversarial/RobustlyUsefulFeature.jpg" width="700">
 
 
+### 7.2. Disentangling Robust and Non-Robust Features
 
+Adversarial training은 모델이 non-robust feature에 의존하지 않도록 학습시키는 방법으로 해석할 수 있다. 그렇다면 robust feature와 non-robust feature를 실제로 분리한 데이터셋을 만들 수 있을까?
 
+논문에서는 먼저 adversarially trained model의 feature extractor $g(x)$를 사용한다. Adversarially trained model은 robust feature를 주로 활용하므로, $g(x)$는 입력 이미지의 robust feature를 잘 반영한다고 볼 수 있다.
+
+이제 원본 이미지 $x$와 동일한 robust representation을 가지는 새로운 이미지 $x_r$를 찾는다. 이를 위해 다음 objective를 최소화한다.
+
+$$
+\min_{x_r} \| g(x_r) - g(x) \|_2
+$$
+
+즉, feature space에서 원본 이미지와 동일한 representation을 갖도록 이미지를 최적화하는 것이다.
+
+Adversarially trained model의 representation은 주로 robust feature를 반영하므로, 이렇게 생성된 $x_r$는 원본 이미지의 robust feature는 유지하면서 non-robust feature는 제거된 이미지로 볼 수 있다. 이를 이용해 논문은 robust dataset $\mathcal{D}_R$과 non-robust dataset $\mathcal{D}_{NR}$을 구성한다.
+
+<img src="https://ekspertos.github.io/assets/img/review/Adversarial/AdversarialExamplesAreNotBugs_1.jpg" width="700">
+
+흥미로운 점은 non-robust feature만 포함된 $\mathcal{D}_{NR}$로 학습하더라도 높은 standard accuracy를 얻을 수 있다는 것이다. 이는 non-robust feature 역시 label 예측에 충분히 유용한 정보를 담고 있음을 보여준다.
+
+또한 (b)의 실험에서는 dog 이미지에 cat의 non-robust feature를 주입한 뒤 해당 이미지를 cat으로 라벨링하여 학습시켰다. 그 결과 모델은 실제로 cat을 인식하는 방향으로 학습되었다. 이는 모델이 인간이 인식하는 semantic 정보보다 non-robust feature를 적극적으로 활용하고 있음을 보여주는 결과이다.
+
+다음은 $\mathcal{D}_R$과 $\mathcal{D}_{NR}$로 각각 학습한 모델의 성능이다.
+
+<img src="https://ekspertos.github.io/assets/img/review/Adversarial/AdversarialExamplesAreNotBugs_2.jpg" width="700">
+
+$\mathcal{D}_R$로 학습한 모델은 adversarial training을 수행하지 않았음에도 높은 adversarial accuracy를 보인다. 반면 $\mathcal{D}_{NR}$로 학습한 모델은 standard accuracy는 높지만 adversarial perturbation에 매우 취약하다. 이는 adversarial robustness가 데이터에 포함된 robust feature와 밀접하게 연관되어 있음을 시사한다.
+
+아래 그림은 adversarial example의 transferability를 보여준다.
+
+<img src="https://ekspertos.github.io/assets/img/review/Adversarial/Transferability.jpg" width="500">
+
+논문은 이러한 transferability 역시 non-robust feature 관점에서 설명한다. 서로 다른 모델들이 데이터셋에 존재하는 동일한 non-robust feature를 학습하기 때문에, 한 모델을 공격하여 생성한 adversarial example이 다른 모델에서도 동일하게 동작한다는 것이다.
+
+또한 모델의 standard accuracy가 높을수록 transferability 역시 증가하는 경향을 보인다. 이는 성능이 좋은 모델일수록 데이터에 존재하는 predictive한 non-robust feature를 더 효과적으로 학습하기 때문으로 해석할 수 있다.
 
 <hr style="border: 2.5px solid #ddd;">
 
 ---
 
 ## 8. Reliable Evaluation of Adversarial Robustness with an Ensemble of Diverse Parameter-free Attacks (2020) — 3.0k citations
+
 
 <hr style="border: 2.5px solid #ddd;">
 
@@ -1292,8 +1341,9 @@ $\rho$-useful feature 이지만 $\gamma$-robust useful feature 이 아닌 경우
 ## 9. Square Attack: A Query-Efficient Black-Box Adversarial Attack via Random Search — 1.7k citations
 
 
+<hr style="border: 2.5px solid #ddd;">
 
-
+---
 
 ## 참고
 
