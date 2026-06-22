@@ -1223,7 +1223,32 @@ $$
 
 ## 7. Adversarial Examples Are Not Bugs, They Are Features (2019) — 2.7k citations
 
-Adversarial example이 발생하는 것은 이미지에 non-robust feature 때문이다.
+그렇다면 adversarial example은 왜 발생하는 것일까? 이 논문은 그 원인을 **non-robust feature**에서 찾는다.
+논문에서는 분류에 활용되는 유의미한 feature를 크게 **robust feature**와 **non-robust feature**로 구분한다.
+
+* **Robust feature**는 label 예측에 유용하면서도 작은 perturbation이 추가되어도 그 예측력이 유지되는 feature이다. 이러한 feature는 대체로 사람이 인식하는 semantic 정보와 유사하다.
+* **Non-robust feature**는 label 예측에는 유용하지만 작은 perturbation에 의해 쉽게 변하는 feature이다. 이러한 feature는 인간이 직접 인식하기 어려운 미세한 통계적 패턴인 경우가 많다.
+
+즉, 모델은 사람이 주목하는 semantic feature뿐만 아니라 사람이 거의 인식하지 못하는 non-robust feature도 함께 활용해 분류를 수행한다. Adversarial perturbation은 바로 이러한 non-robust feature를 조작하여 모델의 예측을 바꾸는 역할을 한다.
+
+다시 말해 **adversarial example은 모델이 강하게 활용하는 non-robust feature 방향에서 가장 쉽게 생성된다. 이러한 feature는 작은 perturbation에 취약하지만, 원래는 label 예측에 유용한 정보를 담고 있다.**
+
+논문의 주요 기여는 다음과 같다.
+
+1. Adversarial perturbation을 단순한 노이즈가 아니라 **non-robust feature를 조작한 결과**라는 새로운 관점에서 설명하였다.
+2. 서로 다른 모델 사이에서 adversarial example이 전이되는 **transferability** 현상을 자연스럽게 설명하였다.
+3. 데이터셋으로부터 robust feature와 non-robust feature를 분리하여 분석하는 방법을 제시하였다.
+
+---
+
+### 7.1.
+
+표준 학습을 하면, 모델은 정확도를 높이기 위해서 non-robust feature을 적극적으로 사용한다.
+
+즉, adversarial example 들은 모델이 강하게 활용하는 non-robust 하지만 predictive 한 특성 방향에서 가장 쉽게 생성된다.
+predictive 특성이란 라벨을 예측하는데 도움되는 특징이다.
+
+
 
 <hr style="border: 2.5px solid #ddd;">
 
